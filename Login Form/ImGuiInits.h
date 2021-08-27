@@ -1,0 +1,368 @@
+#include <deque>
+#include <string>
+
+
+
+static int width = 320;
+static int height = 383;//380
+static float RED = 0.0, GREEN = (255.0 * 0.61), BLUE = (255.0 * 0.91);
+static float REDframe = (13.0f), GREENframe = (62.0f), BLUEbframe = (204.0f), frameAlpha = 50.0f;
+
+static ID3D11Device* g_pd3dDevice = NULL;
+static ID3D11DeviceContext* g_pd3dDeviceContext = NULL;
+static IDXGISwapChain* g_pSwapChain = NULL;
+static ID3D11RenderTargetView* g_mainRenderTargetView = NULL;
+
+bool CreateDeviceD3D(HWND hWnd);
+void CleanupDeviceD3D();
+void CreateRenderTarget();
+void CleanupRenderTarget();
+void InitStyle();
+
+
+
+void InitStyle()
+{
+	ImVec4* colors = ImGui::GetStyle().Colors;
+
+	ImGui::GetStyle().WindowPadding = ImVec2(5.0f, 5.0f);// ImVec2(15, 15);
+	ImGui::GetStyle().FrameRounding = 5.0f;// 4.0f;
+	ImGui::GetStyle().WindowRounding = 5.0f;// 5.0f;
+	ImGui::GetStyle().ChildRounding = 0;// 5.0f;
+	ImGui::GetStyle().ItemInnerSpacing = ImVec2(8, 6);
+	ImGui::GetStyle().IndentSpacing = 25.0f;
+	ImGui::GetStyle().ScrollbarSize = 20.0f;
+	ImGui::GetStyle().ScrollbarRounding = 5.0f;
+	ImGui::GetStyle().GrabMinSize = 20.0f;
+	ImGui::GetStyle().GrabRounding = 3.0f;
+	ImGui::GetStyle().WindowMenuButtonPosition = ImGuiDir_Right;
+	ImGui::GetStyle().WindowTitleAlign = ImVec2(0, 5);;
+
+
+	colors[ImGuiCol_Text] = ImVec4(RED / 255.0, GREEN / 255.0, BLUE / 255.0, 1.0);
+	colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.1, 0.1, 0.1, 0.7);
+	colors[ImGuiCol_ChildBg] = ImVec4(REDframe / 255.0F, GREENframe / 255.0F, BLUEbframe / 255.0F, 1.0f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+	colors[ImGuiCol_Border] = ImVec4(1.0, 1.0, 1.0, 0.5f);
+	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	colors[ImGuiCol_FrameBg] = ImVec4(REDframe / 255.0F, GREENframe / 255.0F, BLUEbframe / 255.0F, 1.0f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.12f, 0.20f, 0.28f, 1.00f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
+	colors[ImGuiCol_TitleBg] = ImVec4(1, 1, 1, 1);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(1, 1, 1, 0.6f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1, 1, 0.00f, 0.51f);
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(1, 1, 1, 0.5);
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(1, 1, 1, 1.0f);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(1, 1, 1, 1.0f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(1, 1, 1, 1.0f);
+	colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.00f, 0.8f);
+	colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.37f, 0.61f, 1.00f, 1.00f);
+	colors[ImGuiCol_Button] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
+	colors[ImGuiCol_Header] = ImVec4(0.20f, 0.25f, 0.29f, 0.55f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+	colors[ImGuiCol_Separator] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
+	colors[ImGuiCol_SeparatorActive] = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
+	colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
+	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+	colors[ImGuiCol_Tab] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	colors[ImGuiCol_TabHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+	colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+	colors[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+	colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+	colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+	colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+	colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+	colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+}
+
+
+bool CreateDeviceD3D(HWND hWnd)
+{
+	// Setup swap chain
+	DXGI_SWAP_CHAIN_DESC sd;
+	ZeroMemory(&sd, sizeof(sd));
+	sd.BufferCount = 2;
+	sd.BufferDesc.Width = 0;
+	sd.BufferDesc.Height = 0;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.OutputWindow = hWnd;
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;
+	sd.Windowed = TRUE;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+	UINT createDeviceFlags = 0;
+	//createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	D3D_FEATURE_LEVEL featureLevel;
+	const D3D_FEATURE_LEVEL featureLevelArray[2] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0, };
+	if (D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext) != S_OK)
+		return false;
+
+	CreateRenderTarget();
+	return true;
+}
+
+void CleanupDeviceD3D()
+{
+	CleanupRenderTarget();
+	if (g_pSwapChain) { g_pSwapChain->Release(); g_pSwapChain = NULL; }
+	if (g_pd3dDeviceContext) { g_pd3dDeviceContext->Release(); g_pd3dDeviceContext = NULL; }
+	if (g_pd3dDevice) { g_pd3dDevice->Release(); g_pd3dDevice = NULL; }
+}
+
+void CreateRenderTarget()
+{
+	ID3D11Texture2D* pBackBuffer;
+	g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+	g_pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &g_mainRenderTargetView);
+	pBackBuffer->Release();
+}
+
+void CleanupRenderTarget()
+{
+	if (g_mainRenderTargetView) { g_mainRenderTargetView->Release(); g_mainRenderTargetView = NULL; }
+}
+
+#define PI 3.1415926535897932f
+void rotatePointAng(ImVec2& pointToRotate, float angle)
+{
+
+	angle = (angle * (PI / 180.f));
+	float cosTheta = (cos(angle));
+	float sinTheta = (sin(angle));
+	float returnVecy = cosTheta * pointToRotate.y + sinTheta * pointToRotate.x;
+	float returnVecx = cosTheta * pointToRotate.x - sinTheta * pointToRotate.y;
+
+
+	pointToRotate = ImVec2((returnVecx), (returnVecy));
+}
+
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+namespace ImGui {
+	void TextCenter(std::string text) {
+		auto windowWidth = ImGui::GetWindowSize().x;
+		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+		ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+		ImGui::Text(text.c_str());
+	}
+	int CenterComponentX(int WidthOfComponent)
+	{
+		ImVec2 WindowSize = ImGui::GetWindowSize();
+		return((WindowSize.x / 2) - (WidthOfComponent / 2));
+	}
+	//Colored Text
+	//Takes string to center with respect to font size
+	//Takes ImVec4 Color
+	void TextCenterCol(std::string text, ImVec4 col) {
+		auto windowWidth = ImGui::GetWindowSize().x;
+		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+		ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_Text, col);
+		ImGui::Text(text.c_str());
+		ImGui::PopStyleColor();
+	}
+	bool BufferingBar(const char* label, float value, const ImVec2& size_arg, const ImU32& bg_col, const ImU32& fg_col) {
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+
+		ImVec2 pos = window->DC.CursorPos;
+		ImVec2 size = size_arg;
+		size.x -= style.FramePadding.x * 2;
+
+		const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+		ItemSize(bb, style.FramePadding.y);
+		if (!ItemAdd(bb, id))
+			return false;
+
+		// Render
+		const float circleStart = size.x * 0.7f;
+		const float circleEnd = size.x;
+		const float circleWidth = circleEnd - circleStart;
+
+		window->DrawList->AddRectFilled(bb.Min, ImVec2(pos.x + circleStart, bb.Max.y), bg_col);
+		window->DrawList->AddRectFilled(bb.Min, ImVec2(pos.x + circleStart * value, bb.Max.y), fg_col);
+
+
+		const float t = g.Time;
+		const float r = size.y / 2;
+		const float speed = 1.5f;
+
+		const float a = speed * 0;
+		const float b = speed * 0.333f;
+		const float c = speed * 0.666f;
+
+		const float o1 = (circleWidth + r) * (t + a - speed * (int)((t + a) / speed)) / speed;
+		const float o2 = (circleWidth + r) * (t + b - speed * (int)((t + b) / speed)) / speed;
+		const float o3 = (circleWidth + r) * (t + c - speed * (int)((t + c) / speed)) / speed;
+
+		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o1, bb.Min.y + r), r, bg_col);
+		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o2, bb.Min.y + r), r, bg_col);
+		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o3, bb.Min.y + r), r, bg_col);
+	}
+	bool UpdateNotes(const char* label, const ImVec2& size_arg, ImVec4 color) {
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+
+		ImVec2 pos = window->DC.CursorPos;
+		ImVec2 size = size_arg;
+		size.x -= style.FramePadding.x * 2;
+
+		const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+		//(bb, style.FramePadding.y);
+		if (!ItemAdd(bb, id))
+			return false;
+		const ImU32 yellow = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0, 1.0, 0.0, 1.0));
+		int sizfe = 0;
+		//window->DrawList->AddRectFilled(ImVec2(0 + pos.x, -2 + pos.y), ImVec2(15 + pos.x, 15 + pos.y), ImGui::GetColorU32(ImVec4(REDframe / 255.0f, GREENframe / 255.0f, BLUEbframe / 255.0f, frameAlpha / 100.0f)), 0.0f);
+		for (int i = 0; i < 3; i++) {
+			window->DrawList->AddLine(ImVec2(2 + pos.x, (3 + (i * 5)) + pos.y), ImVec2(13 + pos.x, (3 + (i * 5)) + pos.y), ImGui::GetColorU32(color), 2.5f);
+		}
+
+	}
+	bool GearIcon(const char* label, float value, float radius, int thickness, const ImU32& color) {
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+
+		ImVec2 pos = window->DC.CursorPos;
+		ImVec2 size((radius) * 2, (radius + style.FramePadding.y) * 2);
+
+		const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+		ItemSize(bb, style.FramePadding.y);
+		if (!ItemAdd(bb, id))
+			return false;
+
+		// Render
+		window->DrawList->PathClear();
+
+		int num_segments = 30;
+
+		//const ImVec2 centre = ImVec2(pos.x + radius, pos.y + radius + style.FramePadding.y);
+		const ImVec2 centre = ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2);
+
+		window->DrawList->AddCircle(centre, 2.0, IM_COL32(0, 0, 0, 255), 5);
+		ImU32 GREEN = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0 / radius, radius, 0.8, 1.0));
+
+
+		std::vector<ImVec2> Points = { {-8,-9},{8,-9},{5,5},{-5,5} };
+		for (int x = 0; x < 4; x++)
+		{
+			Points[x] = ImVec2(Points[x].x * radius, Points[x].y * radius);
+			rotatePointAng(Points[x], value);
+		}
+		for (int j = 0; j < 4; j++)
+		{
+			window->DrawList->AddLine(Points[j] + centre, Points[(j + 1) % 4] + centre, IM_COL32(0, 0, 0, 255), 5.0f);
+		}
+
+
+		window->DrawList->PathStroke(color, false, thickness);
+	}
+	void rainbow(int width) {
+		float rainbowSpeed = 0.001f;
+		static float staticHue = 0;
+		ImDrawList* draw_list = ImGui::GetWindowDrawList();
+		ImVec2 panelPos = ImGui::GetWindowPos();
+		staticHue -= rainbowSpeed;
+		if (staticHue < -1.f) staticHue += 1.f;
+		for (int i = 0; i < width; i++)
+		{
+			float hue = staticHue + (1.f / (float)width) * i;
+			if (hue < 0.f) hue += 1.f;
+			ImColor cRainbow = ImColor::HSV(hue, 1.f, 1.f);
+			draw_list->AddRectFilled(ImVec2(panelPos.x + i, panelPos.y), ImVec2(panelPos.x + i + 1, panelPos.y + 4), cRainbow);
+		}
+	}
+	bool DrawLine(const char* label, ImVec2 p1, ImVec2 p2, const ImVec2& size_arg, float thickness, ImVec4 color) {
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+
+		ImVec2 pos = window->DC.CursorPos;
+		ImVec2 size = size_arg;
+		size.x -= style.FramePadding.x * 2;
+
+		const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+		if (!ItemAdd(bb, id))
+			return false;
+		window->DrawList->AddLine(ImVec2(pos.x + p1.x, pos.y + p1.y), ImVec2(pos.x + p2.x, pos.y + p2.y), ImGui::ColorConvertFloat4ToU32(color), thickness);
+
+	}
+
+	bool Spinner(const char* label, float radius, int thickness, const ImU32& color) {
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+
+		ImVec2 pos = window->DC.CursorPos;
+		ImVec2 size((radius) * 2, (radius + style.FramePadding.y) * 2);
+
+		const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+		ItemSize(bb, style.FramePadding.y);
+		if (!ItemAdd(bb, id))
+			return false;
+
+		// Render
+		window->DrawList->PathClear();
+
+		int num_segments = 60;
+		int start = abs(ImSin(g.Time * 1.8f) * (num_segments - 5));
+
+		const float a_min = IM_PI * 2.0f * ((float)start) / (float)num_segments;
+		const float a_max = IM_PI * 2.0f * ((float)num_segments - 3) / (float)num_segments;
+
+		const ImVec2 centre = ImVec2(pos.x + radius, pos.y + radius + style.FramePadding.y);
+
+		for (int i = 0; i < num_segments; i++) {
+			const float a = a_min + ((float)i / (float)num_segments) * (a_max - a_min);
+			window->DrawList->PathLineTo(ImVec2(centre.x + ImCos(a + g.Time * 8) * radius,
+				centre.y + ImSin(a + g.Time * 8) * radius));
+		}
+
+		window->DrawList->PathStroke(color, false, thickness);
+	}
+
+}
