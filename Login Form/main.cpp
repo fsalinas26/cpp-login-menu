@@ -21,14 +21,10 @@
 #include <tchar.h>
 #include "ImGuiInits.h"
 #include "WndProc.h"
-//#include "FONT.h"
+#include "Font.h"
 
-// Data
-std::string timeFormat(tm timeinfo)
-{
-    using namespace std;
-    return((to_string(timeinfo.tm_mon + 1) + "-" + to_string(timeinfo.tm_mday) + "-" + to_string(timeinfo.tm_year + 1900)).c_str());
-}
+ImFont* Smallfont;
+ImFont* LargeFont;
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -70,7 +66,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 
-    
+    Smallfont = io.Fonts->AddFontFromMemoryCompressedTTF(Medium_compressed_data, Medium_compressed_size, 16.f);
+    LargeFont = io.Fonts->AddFontFromMemoryCompressedTTF(Medium_compressed_data, Medium_compressed_size, 60.f);
 
     InitStyle();
 

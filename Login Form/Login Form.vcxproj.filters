@@ -16,6 +16,9 @@
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{d9d49c7b-03e6-4906-b865-eab36bfe0780}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Font">
+      <UniqueIdentifier>{a2b19ac2-0e5b-4287-a19d-cd12d80c9fbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="WndProc.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Source Files\Font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
