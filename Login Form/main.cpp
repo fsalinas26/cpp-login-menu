@@ -3,12 +3,13 @@
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 //#define DEBUG_MODE
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 #include "imgui_impl_win32.h"
-
+#include "main.h"
 
 
 #include <Windows.h>
@@ -23,11 +24,12 @@
 #include "WndProc.h"
 #include "Font.h"
 
-ImFont* Smallfont;
-ImFont* LargeFont;
+#include "DrawForm.h"
+
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
+    
 #ifdef DEBUG_MODE
     AllocConsole();
 
@@ -104,14 +106,23 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
         ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Once);
-        ImGui::SetNextWindowSize(ImVec2(screen_rect.right * 0.7, screen_rect.bottom * 0.7));
+        ImGui::SetNextWindowSize(ImVec2(1000, 600));
         ImGui::SetNextWindowBgAlpha(1.0f);
-
+        
         static float f = 0.0f;
         static int counter = 0;
 
         ImGui::Begin("##Login Form", &activef, window_flags);
-
+        switch (currentPage)
+        {
+        case Login:
+            LoginPage();
+            break;
+        case Menu:
+            break;
+        default:
+            break;
+        }
         ImGui::End();
 
         ImGui::Render();

@@ -151,6 +151,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DrawForm.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="ImGuiInits.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -161,6 +162,8 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="UserClass.h" />
     <ClInclude Include="WndProc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

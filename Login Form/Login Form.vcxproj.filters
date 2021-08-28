@@ -77,5 +77,14 @@
     <ClInclude Include="Font.h">
       <Filter>Source Files\Font</Filter>
     </ClInclude>
+    <ClInclude Include="DrawForm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserClass.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

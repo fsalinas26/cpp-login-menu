@@ -3,10 +3,9 @@
 
 
 
-static int width = 320;
-static int height = 383;//380
-static float RED = 0.0, GREEN = (255.0 * 0.61), BLUE = (255.0 * 0.91);
-static float REDframe = (13.0f), GREENframe = (62.0f), BLUEbframe = (204.0f), frameAlpha = 50.0f;
+
+ImVec4 TextColor = ImVec4(0.1, 0.1, 0.1, 1.0);
+ImVec4 FrameColor = ImVec4(0.1, 0.1, 0.1, 1.0);
 
 static ID3D11Device* g_pd3dDevice = NULL;
 static ID3D11DeviceContext* g_pd3dDeviceContext = NULL;
@@ -25,10 +24,10 @@ void InitStyle()
 {
 	ImVec4* colors = ImGui::GetStyle().Colors;
 
-	ImGui::GetStyle().WindowPadding = ImVec2(5.0f, 5.0f);// ImVec2(15, 15);
-	ImGui::GetStyle().FrameRounding = 5.0f;// 4.0f;
-	ImGui::GetStyle().WindowRounding = 5.0f;// 5.0f;
-	ImGui::GetStyle().ChildRounding = 0;// 5.0f;
+	ImGui::GetStyle().WindowPadding = ImVec2(5.0f, 5.0f);
+	ImGui::GetStyle().FrameRounding = 5.0f;
+	ImGui::GetStyle().WindowRounding = 5.0f;
+	ImGui::GetStyle().ChildRounding = 0;
 	ImGui::GetStyle().ItemInnerSpacing = ImVec2(8, 6);
 	ImGui::GetStyle().IndentSpacing = 25.0f;
 	ImGui::GetStyle().ScrollbarSize = 20.0f;
@@ -39,14 +38,14 @@ void InitStyle()
 	ImGui::GetStyle().WindowTitleAlign = ImVec2(0, 5);;
 
 
-	colors[ImGuiCol_Text] = ImVec4(RED / 255.0, GREEN / 255.0, BLUE / 255.0, 1.0);
+	colors[ImGuiCol_Text] = TextColor;
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.1, 0.1, 0.1, 0.7);
-	colors[ImGuiCol_ChildBg] = ImVec4(REDframe / 255.0F, GREENframe / 255.0F, BLUEbframe / 255.0F, 1.0f);
+	colors[ImGuiCol_WindowBg] = ImVec4(1.0, 1.0, 1.0, 1.0);
+	colors[ImGuiCol_ChildBg] = FrameColor;
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
 	colors[ImGuiCol_Border] = ImVec4(1.0, 1.0, 1.0, 0.5f);
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	colors[ImGuiCol_FrameBg] = ImVec4(REDframe / 255.0F, GREENframe / 255.0F, BLUEbframe / 255.0F, 1.0f);
+	colors[ImGuiCol_FrameBg] = FrameColor;
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.12f, 0.20f, 0.28f, 1.00f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
 	colors[ImGuiCol_TitleBg] = ImVec4(1, 1, 1, 1);
@@ -60,9 +59,9 @@ void InitStyle()
 	colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.00f, 0.8f);
 	colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
 	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.37f, 0.61f, 1.00f, 1.00f);
-	colors[ImGuiCol_Button] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
+	colors[ImGuiCol_Button] = ImVec4(1.0, 1.0, 1.0, 1.00f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.8, 0.8, 0.8, 1.0f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.0, 1.0, 0.1, 0.5f);
 	colors[ImGuiCol_Header] = ImVec4(0.20f, 0.25f, 0.29f, 0.55f);
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
@@ -244,70 +243,12 @@ namespace ImGui {
 			return false;
 		const ImU32 yellow = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0, 1.0, 0.0, 1.0));
 		int sizfe = 0;
-		//window->DrawList->AddRectFilled(ImVec2(0 + pos.x, -2 + pos.y), ImVec2(15 + pos.x, 15 + pos.y), ImGui::GetColorU32(ImVec4(REDframe / 255.0f, GREENframe / 255.0f, BLUEbframe / 255.0f, frameAlpha / 100.0f)), 0.0f);
 		for (int i = 0; i < 3; i++) {
 			window->DrawList->AddLine(ImVec2(2 + pos.x, (3 + (i * 5)) + pos.y), ImVec2(13 + pos.x, (3 + (i * 5)) + pos.y), ImGui::GetColorU32(color), 2.5f);
 		}
 
 	}
-	bool GearIcon(const char* label, float value, float radius, int thickness, const ImU32& color) {
-		ImGuiWindow* window = GetCurrentWindow();
-		if (window->SkipItems)
-			return false;
-
-		ImGuiContext& g = *GImGui;
-		const ImGuiStyle& style = g.Style;
-		const ImGuiID id = window->GetID(label);
-
-		ImVec2 pos = window->DC.CursorPos;
-		ImVec2 size((radius) * 2, (radius + style.FramePadding.y) * 2);
-
-		const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
-		ItemSize(bb, style.FramePadding.y);
-		if (!ItemAdd(bb, id))
-			return false;
-
-		// Render
-		window->DrawList->PathClear();
-
-		int num_segments = 30;
-
-		//const ImVec2 centre = ImVec2(pos.x + radius, pos.y + radius + style.FramePadding.y);
-		const ImVec2 centre = ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2);
-
-		window->DrawList->AddCircle(centre, 2.0, IM_COL32(0, 0, 0, 255), 5);
-		ImU32 GREEN = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0 / radius, radius, 0.8, 1.0));
-
-
-		std::vector<ImVec2> Points = { {-8,-9},{8,-9},{5,5},{-5,5} };
-		for (int x = 0; x < 4; x++)
-		{
-			Points[x] = ImVec2(Points[x].x * radius, Points[x].y * radius);
-			rotatePointAng(Points[x], value);
-		}
-		for (int j = 0; j < 4; j++)
-		{
-			window->DrawList->AddLine(Points[j] + centre, Points[(j + 1) % 4] + centre, IM_COL32(0, 0, 0, 255), 5.0f);
-		}
-
-
-		window->DrawList->PathStroke(color, false, thickness);
-	}
-	void rainbow(int width) {
-		float rainbowSpeed = 0.001f;
-		static float staticHue = 0;
-		ImDrawList* draw_list = ImGui::GetWindowDrawList();
-		ImVec2 panelPos = ImGui::GetWindowPos();
-		staticHue -= rainbowSpeed;
-		if (staticHue < -1.f) staticHue += 1.f;
-		for (int i = 0; i < width; i++)
-		{
-			float hue = staticHue + (1.f / (float)width) * i;
-			if (hue < 0.f) hue += 1.f;
-			ImColor cRainbow = ImColor::HSV(hue, 1.f, 1.f);
-			draw_list->AddRectFilled(ImVec2(panelPos.x + i, panelPos.y), ImVec2(panelPos.x + i + 1, panelPos.y + 4), cRainbow);
-		}
-	}
+	
 	bool DrawLine(const char* label, ImVec2 p1, ImVec2 p2, const ImVec2& size_arg, float thickness, ImVec4 color) {
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
