@@ -19,6 +19,15 @@
     <Filter Include="Source Files\Font">
       <UniqueIdentifier>{a2b19ac2-0e5b-4287-a19d-cd12d80c9fbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\lw_http">
+      <UniqueIdentifier>{6c7af175-8ea7-47c8-b2f7-bc2ce12862e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\encryption">
+      <UniqueIdentifier>{05296413-62e3-4e90-b25b-1798f1d993f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server">
+      <UniqueIdentifier>{cd8c738f-a70f-4d1a-99d7-80ac4135a78e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lw_http\lw_http.cpp">
+      <Filter>Source Files\lw_http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +97,12 @@
     </ClInclude>
     <ClInclude Include="UserClass.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lw_http\lw_http.hpp">
+      <Filter>Source Files\lw_http</Filter>
+    </ClInclude>
+    <ClInclude Include="encryption\xor.h">
+      <Filter>Source Files\encryption</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

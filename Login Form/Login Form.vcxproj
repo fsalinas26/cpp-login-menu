@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Francisco\source\repos\Login Form\Login Form\ImGui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Francisco\source\repos\Login Form\Login Form\ImGui;C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -148,10 +148,12 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="lw_http\lw_http.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DrawForm.h" />
+    <ClInclude Include="encryption\xor.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="ImGuiInits.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -162,6 +164,7 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="lw_http\lw_http.hpp" />
     <ClInclude Include="main.h" />
     <ClInclude Include="UserClass.h" />
     <ClInclude Include="WndProc.h" />

@@ -34,7 +34,7 @@ void LoginPage()//Draw Login Form Page
 	ImGui::Checkbox("##passworvisible", &showPassword);
 	if (isRegistering)
 	{
-		if (dropButtonDown < 0)dropButtonDown++;//button slide animation
+		if (dropButtonDown < 0)dropButtonDown++;//Button Slide Down Animation
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + dropButtonDown);
 		ImGui::Text("License");
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
