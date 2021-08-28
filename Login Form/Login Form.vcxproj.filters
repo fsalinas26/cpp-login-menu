@@ -54,6 +54,9 @@
     <ClCompile Include="lw_http\lw_http.cpp">
       <Filter>Source Files\lw_http</Filter>
     </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h">
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="encryption\xor.h">
       <Filter>Source Files\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Source Files\Server</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
