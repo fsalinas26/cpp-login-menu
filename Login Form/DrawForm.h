@@ -15,7 +15,7 @@ void Register()
 }
 void LoginPage()//Draw Login Form Page
 {
-	
+
 	ImGui::PushFont(LargeFont);
 	ImGui::TextCenter("Your Program Title");
 	ImGui::PopFont();
@@ -40,9 +40,11 @@ void LoginPage()//Draw Login Form Page
 			dropButtonDown -= fade_in_speed;
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - dropButtonDown);
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1, 0.1, 0.1, abs((dropButtonDown)-40.0f)/ 40.0f));
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(FrameColor.x, FrameColor.y, FrameColor.z, abs((dropButtonDown)-40.0f) / 40.0f));
 		ImGui::Text("License");
-		ImGui::InputText("##License", globalUser.password, sizeof(globalUser.variable));
+		ImGui::PopStyleColor();
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0, 1.0, 1.0, abs((dropButtonDown)-40.0f) / 40.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(FrameColor.x, FrameColor.y, FrameColor.z, abs((dropButtonDown)-40.0f) / 40.0f));
+		ImGui::InputText("##License", globalUser.variable, sizeof(globalUser.variable));
 		ImGui::PopStyleColor(2);
 	}
 	ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - (80 / 2));//Set button at center of screen
