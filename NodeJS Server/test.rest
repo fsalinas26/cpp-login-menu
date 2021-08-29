@@ -1,0 +1,21 @@
+###
+
+POST http://localhost:3000/post HTTP/1.1
+content-type: application/json
+
+{
+    "a": "f"
+}
+###
+
+###
+
+POST http://localhost:3000/post HTTP/1.1
+content-type: application/json
+
+{
+    "a": "database"
+}
+###
+
+GET http://localhost:3000/ 
