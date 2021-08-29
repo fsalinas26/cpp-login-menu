@@ -1,13 +1,15 @@
 ###
 
-POST http://localhost:3000/post HTTP/1.1
+POST http://localhost:3000/admin HTTP/1.1
 content-type: application/json
+Authorization: API_TOKEN
 
 {
-    "a": "f"
+    "a": "show",
+    "length": "90",
+    "rank": "2",
+    "quantity": "5"
 }
-###
-
 ###
 
 POST http://localhost:3000/post HTTP/1.1
