@@ -1,12 +1,14 @@
 #pragma once
 #include "UserClass.h"
+
 bool showPassword = false;
 bool isRegistering = false;
 bool beginLogin = false;
 
 int Size_Of_Input_Fields = 200;
 int spinner_Radius = 10;
-int dropButtonDown = -20;
+float dropButtonDown = 40.0f;
+float fade_in_speed = 0.6f;
 void Register()
 {
 
@@ -34,12 +36,14 @@ void LoginPage()//Draw Login Form Page
 	ImGui::Checkbox("##passworvisible", &showPassword);
 	if (isRegistering)
 	{
-		if (dropButtonDown < 0)dropButtonDown++;//Button Slide Down Animation
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + dropButtonDown);
+		if (dropButtonDown > 0)
+			dropButtonDown -= fade_in_speed;
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - dropButtonDown);
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1, 0.1, 0.1, abs((dropButtonDown)-40.0f)/ 40.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(FrameColor.x, FrameColor.y, FrameColor.z, abs((dropButtonDown)-40.0f) / 40.0f));
 		ImGui::Text("License");
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
 		ImGui::InputText("##License", globalUser.password, sizeof(globalUser.variable));
-		ImGui::PopStyleColor();
+		ImGui::PopStyleColor(2);
 	}
 	ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - (80 / 2));//Set button at center of screen
 	if (!beginLogin)
@@ -50,11 +54,8 @@ void LoginPage()//Draw Login Form Page
 			beginLogin = true;
 			showPassword = true;
 		}
-		if (!isRegistering)
-		{
-			ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - (80 / 2), ImGui::GetWindowSize().y - 30));
-			if (ImGui::Button("Register", ImVec2(80, 20))) { isRegistering = true; }
-		}
+		ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - (80 / 2), ImGui::GetWindowSize().y - 30));
+		if (ImGui::Button(isRegistering ? "Login" : "Register", ImVec2(80, 20))) { dropButtonDown = 45; isRegistering = !isRegistering; }
 		
 		
 	}
