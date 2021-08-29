@@ -22,7 +22,7 @@ router.post("/post",async(req,res)=>{
             res.send("registering");
             break
         case "database":
-            Users.create_user_db();
+            Users.Create_User_Database();
             break
         default:
             res.send("unknown");
