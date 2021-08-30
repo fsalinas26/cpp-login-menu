@@ -3,6 +3,7 @@ const { finished } = require("stream");
 const uuid4 = require("uuid4");
 const database_filepath = "./users.db";
 const db = new sqlite3.Database(database_filepath);
+const config = require('./config.json');
 
 function Create_User_Database(){
     let db = new sqlite3.Database("./users.db", (err)=>{
@@ -137,22 +138,29 @@ async function Login(username, password,hwid)
                     {
                         if(new Date(row.Expiry) > new Date())
                         {
-                            if(row.HWID === hwid)
-                            {
-                                db.run("UPDATE Users SET LastLogin = ? WHERE Username = ?",[getTimestamp(new Date()),username],async function(err,row){});
-                                resolve("Login Success");
-                            }
-                            else if(row.HWID === "0"){
-                                db.run("UPDATE Users SET HWID = ? WHERE Username = ?",[hwid,username],async function(err,row){
-                                    resolve("HWID Updated");
-                                });
-                            }else{
-                                resolve("Invalid HWID");
-                            }
-                        }else{
+                                if(row.HWID === hwid || (!config.HWID_LOCKED))
+                                {
+                                    db.run("UPDATE Users SET LastLogin = ? WHERE Username = ?",[getTimestamp(new Date()),username],async function(err,row){});
+                                    resolve("Login Success");
+                                }
+                                else if(row.HWID === "0")
+                                {
+                                    db.run("UPDATE Users SET HWID = ? WHERE Username = ?",[hwid,username],async function(err,row){
+                                        resolve("HWID Updated");
+                                    });
+                                }
+                                else
+                                {
+                                    resolve("Invalid HWID");
+                                }
+                        }
+                        else
+                        {
                             resolve("License Expired");
                         }
-                    }else{
+                    }
+                    else
+                    {
                         resolve("Invalid Password");
                     }
                 }

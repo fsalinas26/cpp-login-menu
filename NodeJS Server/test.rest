@@ -71,7 +71,7 @@ content-type: application/json
     "a": "login",
     "username":"testUser",
     "password":"1234",
-    "hwid":"ZLQ1893010fQPUI31083"
+    "hwid":"ZLQ189f3010fQPUI31083"
 }
 ###
 

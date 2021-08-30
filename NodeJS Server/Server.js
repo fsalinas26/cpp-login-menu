@@ -9,7 +9,7 @@ app.use(express.json());
 
 
 app.get('/',(req,res)=>{
-    res.send("Test");
+    res.sendStatus(200);
 })
 
 router.post("/post",async(req,res)=>{
@@ -29,7 +29,7 @@ router.post("/post",async(req,res)=>{
             res.send(response);
             break
         default:
-            res.send("unknown");
+            res.send("Unknown Request: " + req.body.a);
             break
     }
 });
@@ -40,7 +40,7 @@ router.post("/admin",async(req,res)=>{
         switch(req.body.a)
         {
             case "generate":
-                var response = ""
+                var response;
                 for(var i = 0; i < req.body.quantity;i++)
                 {
                     var query = await Users.Generate_License(req.body.length,req.body.rank);
@@ -61,7 +61,7 @@ router.post("/admin",async(req,res)=>{
                 res.send(response);
                 break
             default:
-                res.send("unknown");
+                res.send("Unknown Request: " + req.body.a);
                 break
         }
     }else{

@@ -1,3 +1,4 @@
 {
-    "auth": "API_TOKEN"
+    "auth": "API_TOKEN",
+    "HWID_LOCKED": true
 }
