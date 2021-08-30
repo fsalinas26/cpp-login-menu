@@ -11,6 +11,15 @@ Authorization: API_TOKEN
     "quantity": "1"
 }
 ###
+POST http://localhost:3000/admin HTTP/1.1
+content-type: application/json
+Authorization: API_TOKEN
+
+{
+    "a": "resethwid",
+    "username":"testUser"
+}
+###
 
 POST http://localhost:3000/admin HTTP/1.1
 content-type: application/json

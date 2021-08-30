@@ -49,8 +49,12 @@ router.post("/admin",async(req,res)=>{
                 res.send(response);
                 break
             case "show":
-                Users.Show_All_Entries();
-                res.sendStatus(200);
+                var query = await Users.Show_All_Entries();
+                res.send(query);
+                break
+            case "resethwid":
+                var response = await Users.ResetHWID(req.body.username);
+                res.send(response);
                 break
             case "find":
                 var response = await Users.LookupUser(req.body.entry);

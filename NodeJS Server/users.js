@@ -49,6 +49,32 @@ async function Show_All_Entries(length, rank){
         db.serialize(function(){
             db.each("SELECT * FROM Users",function(err,row){
                 console.log(row);
+                object.push(row);
+            },
+            (err,finsihed)=>{
+                resolve(object);
+            })
+        });
+    })
+}
+
+async function ResetHWID(username){
+    return new Promise(resolve=>{
+        db.serialize(function(){
+            db.get("SELECT * FROM Users WHERE Username = ? AND Username IS NOT NULL",[username], async function(err,row)
+            {
+                if(row)
+                {
+                    db.run("UPDATE Users SET HWID = '0' WHERE Username = ?",[username],function(err){
+                        if(err)
+                            resolve(err.message);
+                        else
+                            resolve(`HWID Successfully Updated for ${username}`);
+                    })
+                }
+                else{
+                    resolve("No user found");
+                }
             })
         });
     })
@@ -118,7 +144,7 @@ async function Login(username, password,hwid)
                             }
                             else if(row.HWID === "0"){
                                 db.run("UPDATE Users SET HWID = ? WHERE Username = ?",[hwid,username],async function(err,row){
-                                    resolve("HWID UPDATED");
+                                    resolve("HWID Updated");
                                 });
                             }else{
                                 resolve("Invalid HWID");
@@ -185,5 +211,6 @@ module.exports = {
     Redeem_License:Redeem_License,
     Login:Login,
     ChangePassword:ChangePassword,
-    LookupUser:LookupUser
+    LookupUser:LookupUser,
+    ResetHWID:ResetHWID
 };
