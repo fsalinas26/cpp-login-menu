@@ -11,6 +11,15 @@ Authorization: API_TOKEN
     "quantity": "1"
 }
 ###
+
+POST http://localhost:3000/admin HTTP/1.1
+content-type: application/json
+Authorization: API_TOKEN
+
+{
+    "a": "show"
+}
+###
 POST http://localhost:3000/admin HTTP/1.1
 content-type: application/json
 Authorization: API_TOKEN
@@ -27,17 +36,7 @@ Authorization: API_TOKEN
 
 {
     "a": "find",
-    "entry": "ac41f195-6590-4d27-baf4-512d66900ec9"
-}
-###
-
-POST http://localhost:3000/admin HTTP/1.1
-content-type: application/json
-Authorization: API_TOKEN
-
-{
-    "a": "find",
-    "entry": "680a385e-4477-4171-a722-9de97aad024d"
+    "entry": "test1234"
 }
 ###
 
@@ -46,10 +45,20 @@ content-type: application/json
 
 {
     "a": "redeem",
-    "username":"testUser",
+    "username":"test1234",
     "password":"1234",
     "hwid":"ZLQ1893010fQPUI31083",
-    "license": "ac41f195-6590-4d27-baf4-512d66900ec9"
+    "license": "9cdfa6bf-0fb0-4fba-aad8-5fc841744c2d"
+}
+###
+
+POST http://localhost:3000/post HTTP/1.1
+content-type: application/json
+
+{
+    "a": "resethwid",
+    "username":"test123",
+    "password": "1234"
 }
 ###
 
@@ -69,9 +78,9 @@ content-type: application/json
 
 {
     "a": "login",
-    "username":"testUser",
+    "username":"test1234",
     "password":"1234",
-    "hwid":"ZLQ189f3010fQPUI31083"
+    "hwid":"ZLQ1893010fQPUI31083"
 }
 ###
 
