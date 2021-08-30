@@ -5,10 +5,10 @@ content-type: application/json
 Authorization: API_TOKEN
 
 {
-    "a": "show",
+    "a": "generate",
     "length": "90",
     "rank": "2",
-    "quantity": "5"
+    "quantity": "1"
 }
 ###
 
@@ -16,7 +16,22 @@ POST http://localhost:3000/post HTTP/1.1
 content-type: application/json
 
 {
-    "a": "database"
+    "a": "redeem",
+    "username":"testnpo",
+    "password":"1234",
+    "hwid":"ZLQ1893010fQPUI31083",
+    "license": "680a385e-4477-4171-a722-9de97aad024d"
+}
+###
+
+POST http://localhost:3000/post HTTP/1.1
+content-type: application/json
+
+{
+    "a": "login",
+    "username":"testThree",
+    "password":"1234",
+    "hwid":"ZLQ1893010fQPUI31083"
 }
 ###
 

@@ -13,10 +13,16 @@ app.get('/',(req,res)=>{
 })
 
 router.post("/post",async(req,res)=>{
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     switch(req.body.a)
     {
+        case "redeem":
+            var response = await Users.Redeem_License(req.body.username,req.body.password,req.body.license,req.body.hwid,ip);
+            res.send(response);
+            break
         case "login":
-            res.send("logging in");
+            var response = await Users.Login(req.body.username,req.body.password,req.body.hwid);
+            res.send(response);
             break
         case "register":
             res.send("registering");
@@ -25,7 +31,6 @@ router.post("/post",async(req,res)=>{
             res.send("unknown");
             break
     }
-    console.log(req.body);
 });
 
 router.post("/admin",async(req,res)=>{
