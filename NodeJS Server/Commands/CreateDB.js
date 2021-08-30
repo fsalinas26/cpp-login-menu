@@ -4,10 +4,10 @@ module.exports = {
     name: "create",
     adminOnly: true,
     execute(db,body,res){
-        return new Promise(resolve=>{
+        new Promise(resolve=>{
             let db = new sqlite3.Database("./users.db", (err)=>{
             if(err){
-            return resolve(err.message); 
+            resolve(err.message); 
             }
             resolve("Succesfully created Database");
         }); 

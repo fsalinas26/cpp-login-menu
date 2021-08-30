@@ -1,6 +1,5 @@
 {
     "auth": "API_TOKEN",
     "HWID_LOCKED": true, 
-    "HWID_RESET_FREQUENCY_DAYS": 7.0,
-    "IP_LOCKED": false
+    "HWID_RESET_FREQUENCY_DAYS": 7.0
 }

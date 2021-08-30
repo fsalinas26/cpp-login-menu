@@ -4,15 +4,15 @@ const macros = require("../Macros");
 module.exports = {
     name:"login",
     adminOnly: false,
+    //fields are {username, password, hwid}
     execute(db,body,res,adminMode)
     {
-        return new Promise(resolve=>{
+        new Promise(resolve=>{
             db.serialize(function(){
                 db.get("SELECT * FROM Users WHERE Username = ?",[body.username],async function(err,row)
                 {
                     if(row)
                     {
-                        console.log(row);
                         if(row.Password === body.password)
                         {
                             if(new Date(row.Expiry) > new Date())

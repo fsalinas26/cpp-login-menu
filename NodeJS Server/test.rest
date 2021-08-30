@@ -1,42 +1,44 @@
 ###
 
-POST http://localhost:3000/admin HTTP/1.1
+POST http://localhost:80/admin HTTP/1.1
 content-type: application/json
 Authorization: API_TOKEN
 
 {
-    "a": "generate",
+    "command": "generate",
     "length": "90",
     "rank": "2",
     "quantity": "1"
 }
 ###
 
-POST http://localhost:3000/admin HTTP/1.1
+POST http://localhost:80/admin HTTP/1.1
 content-type: application/json
 Authorization: API_TOKEN
 
 {
-    "a": "show"
+    "command": "show"
 }
 ###
+GET http://127.0.0.1:443/ HTTP/1.1
+
 POST http://localhost:3000/admin HTTP/1.1
 content-type: application/json
 Authorization: API_TOKEN
 
 {
-    "a": "resethwid",
+    "command": "resethwid",
     "username":"testUser"
 }
 ###
 
-POST http://localhost:3000/admin HTTP/1.1
+POST http://localhost:80/admin HTTP/1.1
 content-type: application/json
 Authorization: API_TOKEN
 
 {
-    "a": "find",
-    "entry": "test1234"
+    "command": "find",
+    "entry": "b70ee420-4cd8-45cf-9593-9e2473e1a155"
 }
 ###
 
@@ -44,7 +46,7 @@ POST http://localhost:3000/post HTTP/1.1
 content-type: application/json
 
 {
-    "a": "redeem",
+    "command": "redeem",
     "username":"test1234",
     "password":"1234",
     "hwid":"ZLQ1893010fQPUI31083",
@@ -56,7 +58,7 @@ POST http://localhost:3000/post HTTP/1.1
 content-type: application/json
 
 {
-    "a": "resethwid",
+    "command": "resethwid",
     "username":"test123",
     "password": "1234"
 }
@@ -66,7 +68,7 @@ POST http://localhost:3000/post HTTP/1.1
 content-type: application/json
 
 {
-    "a": "resetpw",
+    "command": "resetpw",
     "username":"testnpo",
     "license": "680a385e-4477-4171-a722-9de97aad024d",
     "newPassword":"12345"
@@ -77,11 +79,11 @@ POST http://localhost:3000/post HTTP/1.1
 content-type: application/json
 
 {
-    "a": "login",
+    "command": "login",
     "username":"test1234",
     "password":"1234",
     "hwid":"ZLQ1893010fQPUI31083"
 }
 ###
 
-GET http://localhost:3000/ 
+GET http://localhost:80/ 
