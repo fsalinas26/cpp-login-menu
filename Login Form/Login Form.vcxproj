@@ -24,6 +24,7 @@
     <ProjectGuid>{8bfde7b9-4f76-44c6-be5c-8d02fee45843}</ProjectGuid>
     <RootNamespace>LoginForm</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>ImGui Login Menu</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
