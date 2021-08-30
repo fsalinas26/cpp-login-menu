@@ -110,5 +110,8 @@
     <ClInclude Include="Server.h">
       <Filter>Source Files\Server</Filter>
     </ClInclude>
+    <ClInclude Include="CallbackThread.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

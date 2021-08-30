@@ -330,12 +330,11 @@ bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, co
 	if (!h_request) return b_result;
 
 	// Custom Header: Content-Type
-	const WCHAR *authHeader = L"Authorization: Bearer h74h5tQ6a7fV4C18gO6VBCQu4jnu3CM3cNHGvfYrLjkP5AqYjhmHZmJJ6gqOSof2";
+	//const WCHAR *authHeader = L"Authorization: Bearer h74h5tQ6a7fV4C18gO6VBCQu4jnu3CM3cNHGvfYrLjkP5AqYjhmHZmJJ6gqOSof2";
 
 	BOOL b_http_result = ::WinHttpAddRequestHeaders(h_request,
 		LWHTTP_CONT_TYPE, -1, WINHTTP_ADDREQ_FLAG_ADD);
-	b_http_result = ::WinHttpAddRequestHeaders(h_request,
-		authHeader, -1, WINHTTP_ADDREQ_FLAG_ADD);
+	
 	if (!b_http_result) goto CleanUp;
 
 	b_http_result = ::WinHttpSendRequest(h_request,

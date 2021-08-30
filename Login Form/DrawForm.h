@@ -4,6 +4,7 @@
 bool showPassword = false;
 bool isRegistering = false;
 bool beginLogin = false;
+bool beginRegister = false;
 
 int Size_Of_Input_Fields = 200;
 int spinner_Radius = 10;
@@ -34,6 +35,7 @@ void LoginPage()//Draw Login Form Page
 	ImGui::PopStyleColor();
 	ImGui::SameLine();
 	ImGui::Checkbox("##passworvisible", &showPassword);
+	showPassword = ImGui::IsItemHovered();
 	if (isRegistering)
 	{
 		if (dropButtonDown > 0)
@@ -48,23 +50,29 @@ void LoginPage()//Draw Login Form Page
 		ImGui::PopStyleColor(2);
 	}
 	ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - (80 / 2));//Set button at center of screen
-	if (!beginLogin)
+	if (!beginLogin && !beginRegister)
 	{
 		
 		if (ImGui::Button(isRegistering ? "Register":"Login", ImVec2(80, 20)))
 		{
-			beginLogin = true;
-			showPassword = true;
+			g_response = "";
+			if (isRegistering)
+				beginRegister = true;
+			else
+				beginLogin = true;
 		}
-		ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - (80 / 2), ImGui::GetWindowSize().y - 30));
-		if (ImGui::Button(isRegistering ? "Login" : "Register", ImVec2(80, 20))) { dropButtonDown = 45; isRegistering = !isRegistering; }
-		
+		if (g_response.size() > 1)
+		{
+			ImGui::TextCenterCol(g_response.substr(0, 100).c_str(), (g_response.rfind("Invalid")==-1)?ImVec4(0, 1, 0, 0.8):ImVec4(1, 0, 0, 0.8));
+		}
 		
 	}
 	else {
 		ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - ((spinner_Radius / 2) / 2));
 		ImGui::Spinner("##loadingSpin", 10.0, 3, IM_COL32(0, 0, 0, 255));
 	}
+	ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - (80 / 2), ImGui::GetWindowSize().y - 30));
+	if (ImGui::Button(isRegistering ? "Login" : "Register", ImVec2(80, 20))) { dropButtonDown = 45; isRegistering = !isRegistering; }
 
 
 	ImGui::PopItemWidth();

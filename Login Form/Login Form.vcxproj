@@ -154,6 +154,7 @@
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CallbackThread.h" />
     <ClInclude Include="DrawForm.h" />
     <ClInclude Include="encryption\xor.h" />
     <ClInclude Include="Font.h" />

@@ -4,8 +4,8 @@
 #include <string>
 
 struct post_request_fields {
-	char* key;
-	char* value;
+	char key[128];
+	std::string value;
 };
 class Server {
 public: 
@@ -13,4 +13,6 @@ public:
 	static void GET(std::wstring URL, std::string& response,std::vector<std::wstring> &headers);
 	static void POST(std::wstring URL, std::vector<post_request_fields> request, std::string &response);
 	static void POST(std::wstring URL, std::vector<post_request_fields> request, std::string &response, std::vector<std::wstring> &headers);
+	static void LOGIN(std::string username, std::string password, std::string HWID, std::string& response);
+	static void REGISTER(std::string username, std::string password, std::string HWID, std::string license, std::string& response);
 };

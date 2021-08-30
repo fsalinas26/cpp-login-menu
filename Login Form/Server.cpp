@@ -1,6 +1,6 @@
 #include "Server.h"
 #include "lw_http.hpp"
-
+//#include "UserClass.h"
 
 //*GET
 //Content type will default to application/x-www-form-urlencoded if no headers are provided
@@ -44,7 +44,7 @@ void Server::POST(std::wstring URL, std::vector<post_request_fields> fields, std
 	}
 	for (int i = 0; i < fields.size(); i++)
 	{
-		request.add_field(fields[i].key, fields[i].value);
+		request.add_field(fields[i].key, fields[i].value.c_str());
 	}
 	std::wstring wURL = std::wstring(URL.begin(), URL.end());
 	send.post(wURL, response, request);
@@ -65,9 +65,22 @@ void Server::POST(std::wstring URL, std::vector<post_request_fields> fields, std
 	}
 	for (int i = 0; i < fields.size(); i++)
 	{
-		request.add_field(fields[i].key, fields[i].value);
+		request.add_field(fields[i].key, fields[i].value.c_str());
 	}
 	std::wstring wURL = std::wstring(URL.begin(), URL.end());
 	send.post(wURL, response, request);
 	send.close_session();
+}
+
+//LOGIN 
+//(encryption soon to be added)
+void Server::LOGIN(std::string username, std::string password, std::string HWID, std::string &response)
+{
+	Server::POST(L"http://localhost/post", { {"command","login"},{"username",username.c_str()},{"password",password.c_str()},{"hwid",HWID.c_str()} }, response);
+}
+
+//Register
+void Server::REGISTER(std::string username, std::string password, std::string HWID,std::string license, std::string& response)
+{
+	Server::POST(L"http://localhost/post", { {"command","redeem"},{"username",username.c_str()},{"password",password.c_str()},{"hwid",HWID.c_str()},{"license",license} }, response);
 }
