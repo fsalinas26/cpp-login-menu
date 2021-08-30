@@ -13,7 +13,7 @@ function Create_User_Database(){
   }); 
   
   db.serialize(function() {
-    db.run("CREATE TABLE Users (License UNIQUE, Username UNIQUE, Password TEXT, HWID TEXT, LastLogin TEXT, LastIP TEXT, Expiry TEXT, Rank TEXT)");
+    db.run("CREATE TABLE Users (License UNIQUE, Username UNIQUE, Password TEXT, HWID TEXT, LastLogin TEXT, LastIP TEXT, Expiry TEXT, 'User Variable' TEXT, Rank TEXT)");
     
     db.each("SELECT * FROM Users", function(err, row) {
         console.log(row);
@@ -140,11 +140,50 @@ async function Login(username, password,hwid)
     })
 }
 
+async function ChangePassword(username,license,newPassword)
+{
+    return new Promise(resolve=>{
+        db.serialize(function(){
+            db.get("SELECT * FROM Users WHERE License = ? AND Username = ?",[license,username],async function(err,row){
+                if(row)
+                {
+                    db.run("UPDATE Users SET Password = ? WHERE License = ?",[newPassword, license],function(err){},
+                    (err,result)=>{
+                        if(err)
+                            resolve(err.message)
+                        else
+                            resolve("Password Changed Successfully");
+                    })
+                }else{
+                    resolve("No user found");
+                }
+            })
+        });
+    
+    })
+}
+
+async function LookupUser(searchFor)
+{
+    return new Promise(resolve=>{
+        db.serialize(function(){
+            db.get("SELECT * FROM Users WHERE Username = ? OR License = ?",[searchFor,searchFor], async function(err,row){
+                if(err)
+                    resolve(err.message);
+                else
+                    resolve(row);
+            });
+        });
+    })
+}
+
 
 module.exports = {
     Create_User_Database:Create_User_Database,
     Generate_License:Generate_License,
     Show_All_Entries:Show_All_Entries,
     Redeem_License:Redeem_License,
-    Login:Login
+    Login:Login,
+    ChangePassword:ChangePassword,
+    LookupUser:LookupUser
 };

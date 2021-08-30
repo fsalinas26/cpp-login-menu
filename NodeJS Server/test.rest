@@ -12,15 +12,46 @@ Authorization: API_TOKEN
 }
 ###
 
+POST http://localhost:3000/admin HTTP/1.1
+content-type: application/json
+Authorization: API_TOKEN
+
+{
+    "a": "find",
+    "entry": "ac41f195-6590-4d27-baf4-512d66900ec9"
+}
+###
+
+POST http://localhost:3000/admin HTTP/1.1
+content-type: application/json
+Authorization: API_TOKEN
+
+{
+    "a": "find",
+    "entry": "680a385e-4477-4171-a722-9de97aad024d"
+}
+###
+
 POST http://localhost:3000/post HTTP/1.1
 content-type: application/json
 
 {
     "a": "redeem",
-    "username":"testnpo",
+    "username":"testUser",
     "password":"1234",
     "hwid":"ZLQ1893010fQPUI31083",
-    "license": "680a385e-4477-4171-a722-9de97aad024d"
+    "license": "ac41f195-6590-4d27-baf4-512d66900ec9"
+}
+###
+
+POST http://localhost:3000/post HTTP/1.1
+content-type: application/json
+
+{
+    "a": "resetpw",
+    "username":"testnpo",
+    "license": "680a385e-4477-4171-a722-9de97aad024d",
+    "newPassword":"12345"
 }
 ###
 
@@ -29,7 +60,7 @@ content-type: application/json
 
 {
     "a": "login",
-    "username":"testThree",
+    "username":"testUser",
     "password":"1234",
     "hwid":"ZLQ1893010fQPUI31083"
 }

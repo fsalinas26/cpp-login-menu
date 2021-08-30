@@ -24,8 +24,9 @@ router.post("/post",async(req,res)=>{
             var response = await Users.Login(req.body.username,req.body.password,req.body.hwid);
             res.send(response);
             break
-        case "register":
-            res.send("registering");
+        case "resetpw":
+            var response = await Users.ChangePassword(req.body.username,req.body.license,req.body.newPassword);
+            res.send(response);
             break
         default:
             res.send("unknown");
@@ -50,6 +51,10 @@ router.post("/admin",async(req,res)=>{
             case "show":
                 Users.Show_All_Entries();
                 res.sendStatus(200);
+                break
+            case "find":
+                var response = await Users.LookupUser(req.body.entry);
+                res.send(response);
                 break
             default:
                 res.send("unknown");
