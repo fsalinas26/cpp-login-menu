@@ -24,7 +24,7 @@
     <ProjectGuid>{8bfde7b9-4f76-44c6-be5c-8d02fee45843}</ProjectGuid>
     <RootNamespace>LoginForm</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>ImGui Login Menu</ProjectName>
+    <ProjectName>Login Form</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -133,7 +133,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;C:\Users\Francisco\source\repos\Login Form\Login Form\Font</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,7 +158,7 @@
     <ClInclude Include="CallbackThread.h" />
     <ClInclude Include="DrawForm.h" />
     <ClInclude Include="encryption\xor.h" />
-    <ClInclude Include="Font.h" />
+    <ClInclude Include="Font\myriad.h" />
     <ClInclude Include="ImGuiInits.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />

@@ -89,9 +89,6 @@
     <ClInclude Include="WndProc.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
     <ClInclude Include="DrawForm.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -112,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="CallbackThread.h">
       <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Font\myriad.h">
+      <Filter>Source Files\Font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -55,6 +55,7 @@ void LoginPage()//Draw Login Form Page
 		
 		if (ImGui::Button(isRegistering ? "Register":"Login", ImVec2(80, 20)))
 		{
+			
 			g_response = "";
 			if (isRegistering)
 				beginRegister = true;
@@ -63,7 +64,7 @@ void LoginPage()//Draw Login Form Page
 		}
 		if (g_response.size() > 1)
 		{
-			ImGui::TextCenterCol(g_response.substr(0, 100).c_str(), (g_response.rfind("Invalid")==-1)?ImVec4(0, 1, 0, 0.8):ImVec4(1, 0, 0, 0.8));
+			ImGui::TextCenterCol(g_response.substr(0, 100).c_str(), (g_response.rfind("Invalid") == -1) ? ImVec4(0, 1, 0, 1.0) : ImVec4(1, 0, 0, 1));
 		}
 		
 	}
