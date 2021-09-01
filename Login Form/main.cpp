@@ -25,9 +25,11 @@
 #include "WndProc.h"
 #include "myriad.h"
 
-#include "DrawForm.h"
 #include "Server.h" 
+#include "UserClass.h"
 #include "CallbackThread.h"
+#include "DrawForm.h"
+
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -46,7 +48,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, "Login Form", NULL };
     RegisterClassEx(&wc);
     HWND main_hwnd = CreateWindow(wc.lpszClassName, "Login Form", WS_POPUP, 0, 0, 5, 5, NULL, NULL, wc.hInstance, NULL);
-    CreateThread(0, 0,(LPTHREAD_START_ROUTINE)CallbackThread, 0, 0,0);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(main_hwnd))
