@@ -1,6 +1,6 @@
 #include <deque>
 #include <string>
-
+#include <map>
 
 
 
@@ -18,13 +18,17 @@ void CreateRenderTarget();
 void CleanupRenderTarget();
 void InitStyle();
 
-
+enum direction {
+	UP = 1,
+	DOWN = 0
+};
+std::map<char*, float> animMap;
 
 void InitStyle()
 {
 	ImVec4* colors = ImGui::GetStyle().Colors;
 
-	ImGui::GetStyle().WindowPadding = ImVec2(5.0f, 5.0f);
+	ImGui::GetStyle().WindowPadding = ImVec2(10.0f, 10.0f);
 	ImGui::GetStyle().FrameRounding = 5.0f;
 	ImGui::GetStyle().WindowRounding = 5.0f;
 	ImGui::GetStyle().ChildRounding = 0;
@@ -156,6 +160,7 @@ void rotatePointAng(ImVec2& pointToRotate, float angle)
 
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace ImGui {
 	void TextCenter(std::string text) {
 		auto windowWidth = ImGui::GetWindowSize().x;
@@ -223,6 +228,42 @@ namespace ImGui {
 		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o1, bb.Min.y + r), r, bg_col);
 		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o2, bb.Min.y + r), r, bg_col);
 		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o3, bb.Min.y + r), r, bg_col);
+	}
+	double DropDownAnimation(char* name, float speed, float startingOffset, bool direction, std::vector<DWORD> colsToFade, bool clearCols)
+	{
+		if (clearCols)
+		{
+			ImGui::PopStyleColor(colsToFade.size());
+			return 0.0f;
+		}
+		std::map<char*, float>::iterator it;
+		it = animMap.find(name);
+		//animMap[name] == Y OFFSET 
+		if (it == animMap.end())
+		{
+			animMap[name] = startingOffset;
+		}
+		if (direction == DOWN)
+		{
+			if (animMap[name] > 0)
+			{
+				animMap[name] -= speed;
+			}
+		}
+		else if(direction == UP)
+		{
+			if (animMap[name] < startingOffset)
+			{
+				animMap[name] += speed;
+			}
+		}
+		for (auto& DWORD : colsToFade)
+		{
+			ImVec4 original = ImGui::GetStyleColorVec4(DWORD);
+			ImGui::PushStyleColor(DWORD, ImVec4(original.x, original.y, original.z, abs(animMap[name]-startingOffset) / startingOffset));
+		}
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - animMap[name]);
+		return abs(animMap[name] - startingOffset) / startingOffset;
 	}
 	bool UpdateNotes(const char* label, const ImVec2& size_arg, ImVec4 color) {
 		ImGuiWindow* window = GetCurrentWindow();

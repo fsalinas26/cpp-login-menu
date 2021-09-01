@@ -1,15 +1,17 @@
 #pragma once
-#include "UserClass.h"
 
 bool showPassword = false;
 bool isRegistering = false;
-bool beginLogin = false;
-bool beginRegister = false;
 
 int Size_Of_Input_Fields = 200;
 int spinner_Radius = 10;
-float dropButtonDown = 40.0f;
-float fade_in_speed = 0.6f;
+
+
+void fade_in_animation()
+{
+
+};
+
 void Register()
 {
 
@@ -22,49 +24,50 @@ void LoginPage()//Draw Login Form Page
 	ImGui::PopFont();
 	ImGui::PushFont(Smallfont);
 	ImGui::PushItemWidth(Size_Of_Input_Fields);
-	ImVec2 Alignment(ImGui::GetWindowSize().x / 2 - (ImGui::CalcItemWidth()/2), 230);//Align at center of window with respect to itemWidth
+	ImVec2 Alignment(ImGui::GetWindowSize().x / 2 - (ImGui::CalcItemWidth() / 2), 230);	//Align at center of window with respect to itemWidth
 	ImGui::Indent(Alignment.x);
 	ImGui::SetCursorPosY(Alignment.y);
 	ImGui::Text("Username");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
-	ImGui::InputText("##usernameField", globalUser.username,sizeof(globalUser.username), beginLogin ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_CharsNoBlank);
+	ImGui::InputText("##usernameField", globalUser.username, sizeof(globalUser.username), fetchingData ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_CharsNoBlank);
 	ImGui::PopStyleColor();
 	ImGui::Text("Password");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
-	ImGui::InputText("##passwordField", globalUser.password,sizeof(globalUser.password), beginLogin ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_CharsNoBlank | (showPassword ? ImGuiInputTextFlags_CharsNoBlank : ImGuiInputTextFlags_Password));
+	ImGui::InputText("##passwordField", globalUser.password, sizeof(globalUser.password), showPassword ? ImGuiInputTextFlags_CharsNoBlank : ImGuiInputTextFlags_Password);
 	ImGui::PopStyleColor();
 	ImGui::SameLine();
 	ImGui::Checkbox("##passworvisible", &showPassword);
 	showPassword = ImGui::IsItemHovered();
-	if (isRegistering)
-	{
-		if (dropButtonDown > 0)
-			dropButtonDown -= fade_in_speed;
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - dropButtonDown);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1, 0.1, 0.1, abs((dropButtonDown)-40.0f)/ 40.0f));
-		ImGui::Text("License");
-		ImGui::PopStyleColor();
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0, 1.0, 1.0, abs((dropButtonDown)-40.0f) / 40.0f));
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(FrameColor.x, FrameColor.y, FrameColor.z, abs((dropButtonDown)-40.0f) / 40.0f));
-		ImGui::InputText("##License", globalUser.variable, sizeof(globalUser.variable));
-		ImGui::PopStyleColor(2);
-	}
-	ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - (80 / 2));//Set button at center of screen
-	if (!beginLogin && !beginRegister)
+
+
+	double inputOpacity = ImGui::DropDownAnimation("license", 0.6f, 40.0f, isRegistering ? DOWN:UP, { ImGuiCol_Text,ImGuiCol_FrameBg },false);
+	ImGui::Text("License");
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,1,1,inputOpacity));
+	ImGui::InputText("##License", globalUser.variable, sizeof(globalUser.variable));
+	ImGui::PopStyleColor();
+	ImGui::DropDownAnimation("license", 0.6f, 40.0f, DOWN, { ImGuiCol_Text,ImGuiCol_FrameBg }, true);
+	
+	ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - (80 / 2));	//Set button at center of screen
+	if (!fetchingData)
 	{
 		
 		if (ImGui::Button(isRegistering ? "Register":"Login", ImVec2(80, 20)))
 		{
-			
-			g_response = "";
-			if (isRegistering)
-				beginRegister = true;
-			else
-				beginLogin = true;
+			if (std::string(globalUser.username).size() < 1 || std::string(globalUser.password).size() < 1)
+			{
+				g_response = "Missing Field";
+			}
+			else 
+			{
+				if (isRegistering)
+					CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ServerFetch,(LPVOID)REGISTER, 0, 0);
+				else
+					CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ServerFetch, (LPVOID)LOGIN, 0, 0);
+			}
 		}
 		if (g_response.size() > 1)
 		{
-			ImGui::TextCenterCol(g_response.substr(0, 100).c_str(), (g_response.rfind("Invalid") == -1) ? ImVec4(0, 1, 0, 1.0) : ImVec4(1, 0, 0, 1));
+			ImGui::TextCenterCol(g_response.substr(0, 100).c_str(), (g_response.rfind("Success") != -1) ? ImVec4(0, 1, 0, 1.0) : ImVec4(1, 0, 0, 1));
 		}
 		
 	}
@@ -73,8 +76,8 @@ void LoginPage()//Draw Login Form Page
 		ImGui::Spinner("##loadingSpin", 10.0, 3, IM_COL32(0, 0, 0, 255));
 	}
 	ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - (80 / 2), ImGui::GetWindowSize().y - 30));
-	if (ImGui::Button(isRegistering ? "Login" : "Register", ImVec2(80, 20))) { dropButtonDown = 45; isRegistering = !isRegistering; }
-
+	if (ImGui::Button(isRegistering ? "Login" : "Register", ImVec2(80, 20))) { isRegistering = !isRegistering; }
+	
 
 	ImGui::PopItemWidth();
 
