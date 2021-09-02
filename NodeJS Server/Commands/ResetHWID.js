@@ -4,7 +4,7 @@ module.exports = {
 name: "resethwid",
 adminOnly: false,
 execute(db,body,res,adminMode){
-    return new Promise(resolve=>{
+    new Promise(resolve=>{
         db.serialize(function(){
             db.get("SELECT * FROM Users WHERE Username = ?"+((!adminMode)?"AND Password = ?":""),[body.username, body.password], async function(err,row)
             {

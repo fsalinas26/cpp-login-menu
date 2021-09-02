@@ -3,7 +3,7 @@ module.exports = {
     adminOnly: false,
     execute(db,body,res)
     {
-        return new Promise(resolve=>{
+        new Promise(resolve=>{
             db.serialize(function(){
                 db.get("SELECT * FROM Users WHERE License = ? AND Username = ?",[body.license,body.username],async function(err,row){
                     if(row)

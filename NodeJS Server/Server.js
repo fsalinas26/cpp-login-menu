@@ -16,7 +16,7 @@ function ImportCommands() {
     for (const file of commandFiles) {
         const command = require(`./Commands/${file}`);
         Commands.set(command.name, command);
-        console.log(`Imported ${command.name}...`)
+        console.log(`Imported ${file}...`)
     }
 }
 ImportCommands();
