@@ -13,6 +13,15 @@ function getTimestamp(today)
     return dateTime;
 }
 
+async function extendTime(timeStamp,daysToExtend)
+{
+  return new Promise(resolve =>{
+    var oldTimestamp = new Date(timeStamp);
+    oldTimestamp.setDate(oldTimestamp.getDate() + daysToExtend);
+    resolve(getTimestamp(oldTimestamp));
+  })
+}
+
 async function getExpiry(days)
 {
   return new Promise(resolve =>{
@@ -26,5 +35,6 @@ async function getExpiry(days)
 module.exports = {
     dayDifference:dayDifference,
     getTimestamp:getTimestamp,
-    getExpiry:getExpiry
+    getExpiry:getExpiry,
+    extendTime:extendTime
 }
