@@ -2,7 +2,7 @@
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -159,5 +159,3 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     return 0;
 }
 
-
-// Win32 message handler

@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Server">
       <UniqueIdentifier>{cd8c738f-a70f-4d1a-99d7-80ac4135a78e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\HWID">
+      <UniqueIdentifier>{5fbc04db-bd9f-468d-abe2-7f9bb31d2919}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="hwid\hwid.cpp">
+      <Filter>Source Files\HWID</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Font\myriad.h">
       <Filter>Source Files\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="hwid\hwid.h">
+      <Filter>Source Files\HWID</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

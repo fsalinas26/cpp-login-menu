@@ -133,7 +133,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;C:\Users\Francisco\source\repos\Login Form\Login Form\Font</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;C:\Users\Francisco\source\repos\Login Form\Login Form\Font;C:\Users\Francisco\source\repos\Login Form\Login Form\hwid</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="hwid\hwid.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="DrawForm.h" />
     <ClInclude Include="encryption\xor.h" />
     <ClInclude Include="Font\myriad.h" />
+    <ClInclude Include="hwid\hwid.h" />
     <ClInclude Include="ImGuiInits.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />

@@ -166,7 +166,7 @@ namespace ImGui {
 		auto windowWidth = ImGui::GetWindowSize().x;
 		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
 
-		ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+		ImGui::SetCursorPosX((ImGui::GetStyle().WindowPadding.x/2) +(windowWidth - textWidth) * 0.5f);
 		ImGui::Text(text.c_str());
 	}
 	int CenterComponentX(int WidthOfComponent)
@@ -181,7 +181,7 @@ namespace ImGui {
 		auto windowWidth = ImGui::GetWindowSize().x;
 		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
 
-		ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+		ImGui::SetCursorPosX((ImGui::GetStyle().WindowPadding.x / 2) + (windowWidth - textWidth) * 0.5f);
 		ImGui::PushStyleColor(ImGuiCol_Text, col);
 		ImGui::Text(text.c_str());
 		ImGui::PopStyleColor();
@@ -229,11 +229,19 @@ namespace ImGui {
 		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o2, bb.Min.y + r), r, bg_col);
 		window->DrawList->AddCircleFilled(ImVec2(pos.x + circleEnd - o3, bb.Min.y + r), r, bg_col);
 	}
-	double DropDownAnimation(char* name, float speed, float startingOffset, bool direction, std::vector<DWORD> colsToFade, bool clearCols)
+	//Drop Down Animation function to move a components y position while adjusting its ALPHA proportionally
+	//*name is the unique label for the item in the map
+	//*speed is the number of pixels to move per function call
+	//*startingOffset is the components starting position. ALPHA is 0.0 at startingOffset
+	//*direction use true for UP and false for DOWN
+	//*ColorsToFade takes a vector of DWORD ImGui Color Styles whose alpha should be changed during the animation
+	//Set ClearCols to true to pop the style vars after the items have been drawn
+	//Return value is the Alpha
+	double DropDownAnimation(char* name, float speed, float startingOffset, bool direction, std::vector<DWORD> ColorsToFade, bool ClearCols)
 	{
-		if (clearCols)
+		if (ClearCols)
 		{
-			ImGui::PopStyleColor(colsToFade.size());
+			ImGui::PopStyleColor(ColorsToFade.size());
 			return 0.0f;
 		}
 		std::map<char*, float>::iterator it;
@@ -257,7 +265,7 @@ namespace ImGui {
 				animMap[name] += speed;
 			}
 		}
-		for (auto& DWORD : colsToFade)
+		for (auto& DWORD : ColorsToFade)
 		{
 			ImVec4 original = ImGui::GetStyleColorVec4(DWORD);
 			ImGui::PushStyleColor(DWORD, ImVec4(original.x, original.y, original.z, abs(animMap[name]-startingOffset) / startingOffset));
