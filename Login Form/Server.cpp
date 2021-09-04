@@ -84,3 +84,15 @@ void Server::REGISTER(std::string username, std::string password, std::string HW
 {
 	Server::POST(L"http://localhost/post", { {"command","redeem"},{"username",username.c_str()},{"password",password.c_str()},{"hwid",HWID.c_str()},{"license",license} }, response);
 }
+
+//ResetPW
+void Server::FORGOT(std::string username, std::string newPassword, std::string license, std::string& response)
+{
+	Server::POST(L"http://localhost/post", { {"command","resetpw"},{"username",username.c_str()},{"newPassword",newPassword}, {"license",license} }, response);
+}
+
+//ResetHWID
+void Server::RESET(std::string username, std::string password,std::string& response)
+{
+	Server::POST(L"http://localhost/post", { {"command","resethwid"},{"username",username.c_str()},{"password",password.c_str()} }, response);
+}

@@ -12,8 +12,11 @@ struct post_request_fields {
 enum Call
 {
 	LOGIN,
-	REGISTER
+	REGISTER,
+	FORGOT,
+	RESET
 };
+
 
 class Server {
 public:
@@ -23,4 +26,6 @@ public:
 	static void POST(std::wstring URL, std::vector<post_request_fields> request, std::string &response, std::vector<std::wstring> &headers);
 	static void LOGIN(std::string username, std::string password, std::string HWID, std::string& response);
 	static void REGISTER(std::string username, std::string password, std::string HWID, std::string license, std::string& response);
+	static void FORGOT(std::string username, std::string newPassword, std::string license, std::string& response);
+	static void RESET(std::string username, std::string password, std::string& response);
 };
