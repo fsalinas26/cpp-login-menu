@@ -274,10 +274,7 @@ bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, co
 		w_srv_port == INTERNET_DEFAULT_HTTPS_PORT ? WINHTTP_FLAG_SECURE : 0);
 	if (!h_request) return b_result;
 
-	// Custom Header: Content-Type
-
-	/*BOOL b_http_result = ::WinHttpAddRequestHeaders(h_request,
-		LWHTTP_CONT_TYPE, -1, WINHTTP_ADDREQ_FLAG_ADD);*/
+	
 	BOOL b_http_result;
 	for (int i = 0; i < headers.size(); i++)
 	{
@@ -329,16 +326,14 @@ bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, co
 		w_srv_port == INTERNET_DEFAULT_HTTPS_PORT ? WINHTTP_FLAG_SECURE : 0);
 	if (!h_request) return b_result;
 
-	// Custom Header: Content-Type
-	//const WCHAR *authHeader = L"Authorization: Bearer h74h5tQ6a7fV4C18gO6VBCQu4jnu3CM3cNHGvfYrLjkP5AqYjhmHZmJJ6gqOSof2";
-
 	BOOL b_http_result = ::WinHttpAddRequestHeaders(h_request,
 		LWHTTP_CONT_TYPE, -1, WINHTTP_ADDREQ_FLAG_ADD);
 	
-	if (!b_http_result) goto CleanUp;
+	
 
+	if (!b_http_result) goto CleanUp;
 	b_http_result = ::WinHttpSendRequest(h_request,
-		WINHTTP_NO_ADDITIONAL_HEADERS, 0, p_data, dw_data_len, dw_data_len, NULL);
+		WINHTTP_NO_ADDITIONAL_HEADERS, 0,p_data, dw_data_len, dw_data_len, NULL);
 	if (!b_http_result) goto CleanUp;
 
 	b_http_result = ::WinHttpReceiveResponse(h_request, NULL);
@@ -347,7 +342,7 @@ bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, co
 	if ((m_dw_last_reply_size_ = read_req_reply(h_request, bt_reply)))
 		b_result = true;
 
-CleanUp:
+	CleanUp:
 	if (h_request)
 		::WinHttpCloseHandle(h_request);
 
