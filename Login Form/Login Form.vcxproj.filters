@@ -31,6 +31,12 @@
     <Filter Include="Source Files\HWID">
       <UniqueIdentifier>{5fbc04db-bd9f-468d-abe2-7f9bb31d2919}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\encryption\cryptPP">
+      <UniqueIdentifier>{72c25ebd-571e-42da-8b57-966d05577ed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Parsing">
+      <UniqueIdentifier>{6f32732f-1650-4b0b-b04f-7bbd2f2329d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,11 +63,17 @@
     <ClCompile Include="lw_http\lw_http.cpp">
       <Filter>Source Files\lw_http</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files\Server</Filter>
-    </ClCompile>
     <ClCompile Include="hwid\hwid.cpp">
       <Filter>Source Files\HWID</Filter>
+    </ClCompile>
+    <ClCompile Include="encryption\crypto.cpp">
+      <Filter>Source Files\encryption\cryptPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Server Auth\HttpRequest.cpp">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Server Auth\Authentication.cpp">
+      <Filter>Source Files\Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +122,7 @@
     <ClInclude Include="encryption\xor.h">
       <Filter>Source Files\encryption</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
+    <ClInclude Include="HttpRequest.h">
       <Filter>Source Files\Server</Filter>
     </ClInclude>
     <ClInclude Include="CallbackThread.h">
@@ -121,6 +133,15 @@
     </ClInclude>
     <ClInclude Include="hwid\hwid.h">
       <Filter>Source Files\HWID</Filter>
+    </ClInclude>
+    <ClInclude Include="encryption\crypto.h">
+      <Filter>Source Files\encryption\cryptPP</Filter>
+    </ClInclude>
+    <ClInclude Include="parsing\json.hpp">
+      <Filter>Source Files\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="Authentication.h">
+      <Filter>Source Files\Server</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@
 #include "imgui_impl_win32.h"
 #include "main.h"
 
-
 #include <Windows.h>
 #include <WinUser.h>
 #include <vector>
@@ -24,13 +23,14 @@
 #include "ImGuiInits.h"
 #include "WndProc.h"
 #include "myriad.h"
-
-#include "Server.h" 
-#include "UserClass.h"
+#include "HttpRequest.h"
+#include <crypto.h>
+#include "Authentication.h"
 #include "CallbackThread.h"
 #include "DrawForm.h"
 
 
+extern c_crypto g_crypto;
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -40,7 +40,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 #endif // DEBUG_MODE
-
+    g_crypto.key = "oUHqJ9IOlyjA4edqmyFdkeNi8J/x+dte2AWlGRd2uTM=";
     
     HWND desktop = GetDesktopWindow();
     RECT desktopr;

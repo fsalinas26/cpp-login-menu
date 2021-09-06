@@ -83,6 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Users\Francisco\source\repos\Login Form\Login Form\ImGui;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -130,20 +131,22 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;C:\Users\Francisco\source\repos\Login Form\Login Form\Font;C:\Users\Francisco\source\repos\Login Form\Login Form\hwid</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Francisco\source\repos\Login Form\Login Form\lw_http;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption;C:\Users\Francisco\source\repos\Login Form\Login Form\Font;C:\Users\Francisco\source\repos\Login Form\Login Form\hwid;C:\Users\Francisco\source\repos\Login Form\Login Form\encryption\cryptopp;C:\Users\Francisco\source\repos\Login Form\Login Form\parsing;C:\Users\Francisco\source\repos\Login Form\Login Form\Server Auth</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;cryptlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="encryption\crypto.cpp" />
     <ClCompile Include="hwid\hwid.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -153,11 +156,16 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="lw_http\lw_http.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Server Auth\Authentication.cpp" />
+    <ClCompile Include="Server Auth\HttpRequest.cpp" />
+    <ClInclude Include="Authentication.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CallbackThread.h" />
     <ClInclude Include="DrawForm.h" />
+    <ClInclude Include="encryption\crypto.h" />
     <ClInclude Include="encryption\xor.h" />
     <ClInclude Include="Font\myriad.h" />
     <ClInclude Include="hwid\hwid.h" />
@@ -172,7 +180,8 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="lw_http\lw_http.hpp" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="Server.h" />
+    <ClInclude Include="parsing\json.hpp" />
+    <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="UserClass.h" />
     <ClInclude Include="WndProc.h" />
   </ItemGroup>

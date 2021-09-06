@@ -47,7 +47,7 @@ void InitStyle()
 	colors[ImGuiCol_WindowBg] = ImVec4(1.0, 1.0, 1.0, 1.0);
 	colors[ImGuiCol_ChildBg] = FrameColor;
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-	colors[ImGuiCol_Border] = ImVec4(1.0, 1.0, 1.0, 0.5f);
+	colors[ImGuiCol_Border] = ImVec4(0.0, 0.0, 0.0, 0.5f);
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	colors[ImGuiCol_FrameBg] = FrameColor;
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.12f, 0.20f, 0.28f, 1.00f);
