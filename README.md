@@ -7,7 +7,7 @@ A simple and ready-to-use ImGui login menu with a fully functioning NodeJS Serve
 
 * [Database Structure](https://github.com/fsalinas26/cpp-login-menu#sqlite-database-structure)  
 * [Database Commands](https://github.com/fsalinas26/cpp-login-menu#database-commands)  
-* [Server Auth](https://github.com/fsalinas26/cpp-login-menu#authentication)  
+* [HTTP Request](https://github.com/fsalinas26/cpp-login-menu#http-request)  
 
 ## SQLite Database Structure  
 <img src="https://i.gyazo.com/15d1064b2e246d6facc2d7e8bed6f9e1.png">
@@ -40,15 +40,16 @@ module.exports = {
 **body** is the incoming request body (JSON Object).  
 **out_obj** is the outgoing response JSON object (Use this to pass any data from the database to your client)  
 **adminMode** When true, certain commands will not have cooldown/argument restrictions (resethwid, resetpw)   
+
 ### ChangePassword.js  
 **Name:** resetpw  
 **body**: username, license, newPassword  
-Changes the password of the database entry where both username and license are found.  
+Changes the password of the table entry where both username and license are found.  
 
 ### ChangeRank.js (Admin Only)  
 **Name:** rank  
 **body:** username,newRank  
-Changes the rank of the database entry where username is found.
+Changes the rank of the table entry where username is found.
 
 ### CreateDB.js (Admin Only) **  
 **Name:** create  
@@ -57,37 +58,39 @@ This function should only be called once if you want to create a new database.
 ### ExtendLicense.js (Admin Only)   
 **Name:** extend  
 **body:** username, extendBy  
-Extends the expiry date of the database entry where username is found. **extendBy** takes days.  
+Extends the expiry date of the table entry where username is found. **extendBy** takes days.  
 
 ### GenerateKey.js (Admin Only)  
 **Name:** generate  
 **body:** length, rank  
-Inserts a new license key into the database with length (in days) and rank.      
+Inserts a new license key into the table with length (in days) and rank.      
 
 ### Login.js 
 **Name:** login  
 **body:** username, password, HWID  
-Returns rank, user variable, expiry date, and login success if an entry is found in the database.  
+Returns rank, user variable, expiry date, and login success if an entry is found in the table.  
 
 ### LookupUser.js (Admin Only)  
 **Name:** find  
 **body:** entry  
-Returns all key/value data of a user in the database where either username or license are found.  
+Returns all key/value data of a user where either username or license are found in the table.  
 
 ### Redeem.js 
 **Name:** redeem  
 **body:** username, password, hwid, license  
-Populates an entry in the database where license is found.  
+Populates an entry in the table where license is found.  
 
 ### ResetHWID.js (AdminOnly)
 **Name:** resethwid  
 **body:** username, password (not required if calling from admin route)  
-Resets the HWID of an entry in the database where username is found. The HWID reset cooldown can be set in config.json.  
+Resets the HWID of an entry in the table where username is found. The HWID reset cooldown can be set in config.json.  
 
 ### ShowAllUsers.js (AdminOnly)
 **Name:** show  
 **body:** n/a  
-Returns an array of objects of all entries in the database.  
+Returns an array of objects of all entries in the table.  
 
 
-## Authentication
+## HTTP Request
+Each request is [initialized](https://github.com/fsalinas26/cpp-login-menu/blob/master/Login%20Form/Server%20Auth/Authentication.cpp#L25) with a random session IV, and is encrypted using AES-256-CFB and [encoded](https://github.com/fsalinas26/cpp-login-menu/blob/master/Login%20Form/Server%20Auth/Authentication.cpp#L35-L39) in Base64URL. Both client and server will have a shared secret.  
+
