@@ -22,7 +22,12 @@ enum direction {
 	UP = 1,
 	DOWN = 0
 };
+
+
 std::map<char*, float> animMap;
+std::map<DWORD, ImVec4> fadeMap;
+float fadeMult = 1.0;
+double time_start = -1.0;
 
 void InitStyle()
 {
@@ -273,6 +278,32 @@ namespace ImGui {
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - animMap[name]);
 		return abs(animMap[name] - startingOffset) / startingOffset;
 	}
+	double LoginPageFade(std::vector<DWORD> StylesToFade, double animationDelay,double animationTime)
+	{
+		if (fadeMult <= 0.0)return 0.0;
+		ImGuiContext& g = *GImGui;
+		if (time_start == -1.0)
+			time_start = g.Time;
+		if (g.Time - time_start < animationDelay)
+			return 1.0;
+		fadeMult = 1.0 - ((g.Time - (time_start + animationDelay)) / animationTime);
+		ImVec4* colors = ImGui::GetStyle().Colors;
+		for (auto& style : StylesToFade)
+		{
+			std::map<DWORD,ImVec4>::iterator it;
+			it = fadeMap.find(style);
+			if (it == fadeMap.end())
+			{
+				fadeMap[style] = colors[style];
+			}
+			ImVec4 temp = fadeMap[style];
+			temp.w *= fadeMult;
+			ImGui::PushStyleColor(style, temp);
+		}
+		return fadeMult;
+		
+	}
+
 	bool UpdateNotes(const char* label, const ImVec2& size_arg, ImVec4 color) {
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
