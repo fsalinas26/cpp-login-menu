@@ -2,7 +2,7 @@ module.exports = {
 name: "rank",
 adminOnly: true,
 execute(db,body,res,adminMode){
-    new Promise(resolve=>{
+    return new Promise(resolve=>{
         db.serialize(function(){
             db.get("SELECT * FROM Users WHERE Username = ?",[body.username], async function(err,row)
             {
@@ -20,8 +20,6 @@ execute(db,body,res,adminMode){
                 }
             })
         });
-    }).then(response=>{
-        res.send(response);
-    })
+    });
 }
 }

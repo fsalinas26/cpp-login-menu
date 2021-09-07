@@ -5,9 +5,9 @@ module.exports = {
     name:"login",
     adminOnly: false,
     //fields are {username, password, hwid}
-    execute(db,body,res,adminMode)
+    execute(db,body,out_obj,adminMode)
     {
-        new Promise(resolve=>{
+        return new Promise(resolve=>{
             db.serialize(function(){
                 db.get("SELECT * FROM Users WHERE Username = ?",[body.username],async function(err,row)
                 {
@@ -20,6 +20,9 @@ module.exports = {
                                 if(row.HWID === body.hwid || (!config.HWID_LOCKED))
                                 {
                                     db.run("UPDATE Users SET LastLogin = ? WHERE Username = ?",[macros.getTimestamp(new Date()),body.username],async function(err,row){});
+                                    out_obj["Rank"] = row.Rank;
+                                    out_obj["UserVar"] = row.UserVar;
+                                    out_obj["Expiry"] = row.Expiry;
                                     resolve("Login Success");
                                 }
                                 else if(row.HWID === "0")
@@ -50,8 +53,6 @@ module.exports = {
                 })
             });
         
-        }).then(response=>{
-            res.send(response);
         })
 }
 }

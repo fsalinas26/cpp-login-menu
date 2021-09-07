@@ -1,9 +1,9 @@
 module.exports = {
     name:"resetpw",
     adminOnly: false,
-    execute(db,body,res)
+    execute(db,body,obj_out)
     {
-        new Promise(resolve=>{
+        return new Promise(resolve=>{
             db.serialize(function(){
                 db.get("SELECT * FROM Users WHERE License = ? AND Username = ?",[body.license,body.username],async function(err,row){
                     if(row)
@@ -21,8 +21,6 @@ module.exports = {
                 })
             });
         
-        }).then(response=>{
-            res.send(response);
         })
     }
 }

@@ -3,10 +3,11 @@ const macros = require("../Macros");
 module.exports = {
 name: "resethwid",
 adminOnly: false,
-execute(db,body,res,adminMode){
-    new Promise(resolve=>{
+execute(db,body,obj_out,adminMode){
+    console.log(adminMode);
+    return new Promise(resolve=>{
         db.serialize(function(){
-            db.get("SELECT * FROM Users WHERE Username = ?"+((!adminMode)?"AND Password = ?":""),[body.username, body.password], async function(err,row)
+            db.get("SELECT * FROM Users WHERE Username = ?"+(adminMode?"":" AND Password = ?"),adminMode?[body.username]:[body.username,body.password], async function(err,row)
             {
                 if(row)
                 {
@@ -28,8 +29,6 @@ execute(db,body,res,adminMode){
                 }
             })
         });
-    }).then(response=>{
-        res.send(response);
     })
 }
 }

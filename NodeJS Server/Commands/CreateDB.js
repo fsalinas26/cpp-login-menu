@@ -4,7 +4,7 @@ module.exports = {
     name: "create",
     adminOnly: true,
     execute(db,body,res){
-        new Promise(resolve=>{
+        return new Promise(resolve=>{
             let db = new sqlite3.Database("./users.db", (err)=>{
             if(err){
             resolve(err.message); 
@@ -21,8 +21,6 @@ module.exports = {
         });
         
         db.close();
-        }).then(response=>{
-            res.send(response);
-        })
+        });
     }
 }

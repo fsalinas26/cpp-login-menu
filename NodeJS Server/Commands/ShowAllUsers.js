@@ -4,7 +4,7 @@ module.exports = {
     execute(db,body,res)
     {
         var obj = [];
-        new Promise(resolve=>{
+        return new Promise(resolve=>{
             db.serialize(function(){
                 db.each("SELECT * FROM Users",async function(err,row){
                     if(row)
@@ -22,8 +22,6 @@ module.exports = {
                         resolve(obj);
                 })
             });
-        }).then(response=>{
-            res.send(response);
         })
     }
 }
