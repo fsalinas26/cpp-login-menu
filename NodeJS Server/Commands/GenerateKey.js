@@ -5,7 +5,7 @@ const uuid4 = require("uuid4");
 module.exports = {
     name: "generate",
     adminOnly: true,
-    async execute(db,body,res){
+    async execute(db,body,out_obj){
         var id = await new Promise(resolve=>{var ID = uuid4();resolve(ID)});
         return new Promise(resolve=>{
             db.serialize(async function(){

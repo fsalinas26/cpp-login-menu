@@ -1,7 +1,7 @@
 module.exports = {
     name: "show",
     adminOnly: true,
-    execute(db,body,res)
+    execute(db,body,out_obj)
     {
         var obj = [];
         return new Promise(resolve=>{

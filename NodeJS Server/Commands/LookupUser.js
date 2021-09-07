@@ -1,7 +1,7 @@
 module.exports = {
     name: "find",
     adminOnly: true,
-    execute(db,body,res)
+    execute(db,body)
     {
         return new Promise(resolve=>{
             db.serialize(function(){

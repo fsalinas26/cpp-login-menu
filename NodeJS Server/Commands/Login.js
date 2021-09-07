@@ -20,7 +20,7 @@ module.exports = {
                                 if(row.HWID === body.hwid || (!config.HWID_LOCKED))
                                 {
                                     db.run("UPDATE Users SET LastLogin = ? WHERE Username = ?",[macros.getTimestamp(new Date()),body.username],async function(err,row){});
-                                    out_obj["Rank"] = row.Rank;
+                                    out_obj["Rank"] = (row.Rank).toString();
                                     out_obj["UserVar"] = row.UserVar;
                                     out_obj["Expiry"] = row.Expiry;
                                     resolve("Login Success");

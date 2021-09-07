@@ -11,10 +11,10 @@ execute(db,body,obj_out,adminMode){
             {
                 if(row)
                 {
-                    var DaysFromLastReset = await macros.dayDifference(new Date(row.LastHWIDReset));
+                    var DaysFromLastReset = await macros.dayDifference(new Date(row.LastReset));
                     if(DaysFromLastReset > config.HWID_RESET_FREQUENCY_DAYS || adminMode)
                     {
-                        db.run("UPDATE Users SET HWID = '0', LastHWIDReset = ? WHERE Username = ?",[macros.getTimestamp(new Date()),body.username],function(err){
+                        db.run("UPDATE Users SET HWID = '0', LastReset = ? WHERE Username = ?",[macros.getTimestamp(new Date()),body.username],function(err){
                             if(err)
                                 resolve(err.message);
                             else

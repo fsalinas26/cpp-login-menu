@@ -3,7 +3,7 @@ const macros = require("../Macros");
 module.exports = {
     name: "redeem",
     adminOnly: false,
-    execute(db, body, obj_out)
+    execute(db, body)
     {
         return new Promise(resolve=>{
             db.serialize(function(){
