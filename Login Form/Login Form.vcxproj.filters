@@ -125,9 +125,6 @@
     <ClInclude Include="HttpRequest.h">
       <Filter>Source Files\Server</Filter>
     </ClInclude>
-    <ClInclude Include="CallbackThread.h">
-      <Filter>Source Files\Server</Filter>
-    </ClInclude>
     <ClInclude Include="Font\myriad.h">
       <Filter>Source Files\Font</Filter>
     </ClInclude>
@@ -140,7 +137,10 @@
     <ClInclude Include="parsing\json.hpp">
       <Filter>Source Files\Parsing</Filter>
     </ClInclude>
-    <ClInclude Include="Authentication.h">
+    <ClInclude Include="Server Auth\Authentication.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Server Auth\CallbackThread.h">
       <Filter>Source Files\Server</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include "hwid.h"
-#include "UserClass.h"
+#include "../UserClass.h"
 
 void ServerCall(int command)
 {

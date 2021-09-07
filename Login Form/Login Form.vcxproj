@@ -158,12 +158,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server Auth\Authentication.cpp" />
     <ClCompile Include="Server Auth\HttpRequest.cpp" />
-    <ClInclude Include="Authentication.h">
-      <FileType>CppCode</FileType>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CallbackThread.h" />
     <ClInclude Include="DrawForm.h" />
     <ClInclude Include="encryption\crypto.h" />
     <ClInclude Include="encryption\xor.h" />
@@ -182,6 +178,8 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="parsing\json.hpp" />
     <ClInclude Include="HttpRequest.h" />
+    <ClInclude Include="Server Auth\Authentication.h" />
+    <ClInclude Include="Server Auth\CallbackThread.h" />
     <ClInclude Include="UserClass.h" />
     <ClInclude Include="WndProc.h" />
   </ItemGroup>
