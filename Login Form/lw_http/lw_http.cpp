@@ -251,7 +251,38 @@ void c_lw_http::parse_url_a(std::wstring& s_url, std::wstring& s_srv, std::wstri
 	else
 		w_port = INTERNET_DEFAULT_HTTPS_PORT;
 }
+static std::string queryHeaders(HINTERNET hRequest)
+{
+	DWORD dwSize = 0;
+	LPVOID lpOutBuffer = NULL;
+	BOOL bResults = false;
+	WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_RAW_HEADERS_CRLF | WINHTTP_QUERY_FLAG_REQUEST_HEADERS,
+		WINHTTP_HEADER_NAME_BY_INDEX, NULL,
+		&dwSize, WINHTTP_NO_HEADER_INDEX);
 
+	// Allocate memory for the buffer.
+	if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+	{
+		lpOutBuffer = new WCHAR[dwSize / sizeof(WCHAR)];
+
+		// Now, use WinHttpQueryHeaders to retrieve the header.
+		bResults = WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_RAW_HEADERS_CRLF |
+			WINHTTP_QUERY_FLAG_REQUEST_HEADERS,
+			WINHTTP_HEADER_NAME_BY_INDEX,
+			lpOutBuffer, &dwSize,
+			WINHTTP_NO_HEADER_INDEX);
+	}
+	return std::string(static_cast<const char*>(lpOutBuffer), dwSize);
+}
+static void debug_log_request(std::wstring URL, HINTERNET h_request, LPVOID p_data, DWORD dw_data_len)
+{
+	char buffer[32];
+	std::cout << "URL: " << std::string(URL.begin(),URL.end()).c_str() << '\n';
+	std::cout << "OUTGOING HTTP REQUEST\n" << std::string(30, '*') << '\n';
+	std::cout << "HEADERS\n"<< queryHeaders(h_request) << '\n';
+	std::cout << "DATA size: " << _ltoa((long)dw_data_len,buffer,10) << '\n' << std::string(static_cast<const char*>(p_data), dw_data_len).c_str() << '\n';
+	std::cout << std::string(30, '*') << '\n';
+}
 bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, const PWCHAR psz_type, const LPVOID p_data, const DWORD dw_data_len, std::vector<std::wstring> &headers)
 {
 	bool b_result = false;
@@ -275,14 +306,25 @@ bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, co
 	if (!h_request) return b_result;
 
 	
-	BOOL b_http_result;
+	BOOL b_http_result, content_type_provided=0;
 	for (int i = 0; i < headers.size(); i++)
 	{
+		if (headers[i].rfind(L"Content-Type:")!=-1)content_type_provided = 1;
 		b_http_result = ::WinHttpAddRequestHeaders(h_request,
 			headers[i].c_str(), -1, WINHTTP_ADDREQ_FLAG_ADD);
 		if (!b_http_result) goto CleanUp;
 	}
-	
+
+	if (!content_type_provided) //If the content-type is not provided in the vector of headers, it will default to LWHTTP_CONT_TYPE
+	{
+		b_http_result = ::WinHttpAddRequestHeaders(h_request,
+			LWHTTP_CONT_TYPE, -1, WINHTTP_ADDREQ_FLAG_ADD);
+		if (!b_http_result) goto CleanUp;
+	}
+
+	#ifdef DEBUG
+		debug_log_request(s_url, h_request, p_data, dw_data_len);
+	#endif // DEBUG
 
 	b_http_result = ::WinHttpSendRequest(h_request,
 		WINHTTP_NO_ADDITIONAL_HEADERS, 0, p_data, dw_data_len, dw_data_len, NULL);
@@ -329,19 +371,19 @@ bool c_lw_http::send_request(std::wstring s_url, std::vector<BYTE>& bt_reply, co
 	BOOL b_http_result = ::WinHttpAddRequestHeaders(h_request,
 		LWHTTP_CONT_TYPE, -1, WINHTTP_ADDREQ_FLAG_ADD);
 	
-	
+	#ifdef DEBUG
+		debug_log_request(s_url, h_request, p_data, dw_data_len);
+	#endif // DEBUG
 
 	if (!b_http_result) goto CleanUp;
 	b_http_result = ::WinHttpSendRequest(h_request,
 		WINHTTP_NO_ADDITIONAL_HEADERS, 0,p_data, dw_data_len, dw_data_len, NULL);
 	if (!b_http_result) goto CleanUp;
-
 	b_http_result = ::WinHttpReceiveResponse(h_request, NULL);
 	if (!b_http_result) goto CleanUp;
 
 	if ((m_dw_last_reply_size_ = read_req_reply(h_request, bt_reply)))
 		b_result = true;
-
 	CleanUp:
 	if (h_request)
 		::WinHttpCloseHandle(h_request);
@@ -375,6 +417,10 @@ DWORD c_lw_http::read_req_reply(HINTERNET hRequest, std::vector<BYTE>& btReply)
 
 		if (!WinHttpReadData(hRequest, psz_tmp_buffer, dw_bytes_available, &dw_bytes_read))
 			goto CleanUp;
+		#ifdef DEBUG
+			std::cout << "INCOMING HTTP RESPONSE\n" << std::string(30, '*') << '\n';
+			std::cout << std::string(psz_tmp_buffer, dw_bytes_available) << "\n\n\n\n";
+		#endif // DEBUG
 
 		btReply.insert(btReply.end(), (PBYTE)(psz_tmp_buffer),
 			(PBYTE)((uintptr_t)(psz_tmp_buffer)+dw_bytes_available));
@@ -451,7 +497,7 @@ bool c_lw_http::get(const std::wstring sURL, std::string& s_reply,std::vector<st
 {
 	std::vector< BYTE > bt_reply;
 
-	const bool b_result = send_request(sURL, bt_reply, L"GET", NULL, 0);
+	const bool b_result = send_request(sURL, bt_reply, L"GET", NULL, 0,headers);
 
 	s_reply.clear();
 	s_reply = std::string(bt_reply.begin(), bt_reply.end());
