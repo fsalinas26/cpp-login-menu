@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Parsing">
       <UniqueIdentifier>{6f32732f-1650-4b0b-b04f-7bbd2f2329d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Textures">
+      <UniqueIdentifier>{161e7ceb-106b-4328-996f-4657f6e295a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Server Auth\CallbackThread.h">
       <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures\exitButton.h">
+      <Filter>Source Files\Textures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

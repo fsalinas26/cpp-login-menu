@@ -22,13 +22,18 @@ void LoginPage()//Draw Login Form Page
 {
 	ImGui::PushFont(LargeFont);
 	ImGui::TextCenter("Your Program Title");
-	if (g_response == "Login Success")
+	ImGui::SameLine();
+	ImGui::SetCursorPos(ImVec2(950, 15));
+	if (ImGui::ImageButton((PVOID)exitIcon, ImVec2(30, 30)))
+		exit(43);
+	if (g_response["res"] == "Login Success")
 	{
-		fadeLoginPage = ImGui::LoginPageFade({ ImGuiCol_Text,ImGuiCol_FrameBg,ImGuiCol_Button },0.4,1.0f);
-		ImGui::SetCursorPosY((ImGui::GetWindowSize().y /2 - 30.0) - (30.0 * fadeLoginPage));
+		fadeLoginPage = ImGui::LoginPageFade({ ImGuiCol_Text,ImGuiCol_FrameBg,ImGuiCol_Button }, 0.4, 1.0f);
+		ImGui::SetCursorPosY((ImGui::GetWindowSize().y / 2 - 30.0) - (30.0 * fadeLoginPage));
 		ImGui::TextCenterCol(("Welcome, " + std::string(globalUser.username)).c_str(), ImVec4(TextColor.x, TextColor.y, TextColor.z, 1.0 - fadeLoginPage));
 		if (fadeLoginPage == 0.0)return;
 	}
+	
 	ImGui::PopFont();
 	ImGui::PushFont(Smallfont);
 	ImGui::PushItemWidth(Size_Of_Input_Fields*fadeLoginPage);
@@ -59,20 +64,20 @@ void LoginPage()//Draw Login Form Page
 	if (!fetchingData)
 	{
 
-		if (ImGui::Button(CommandStrings[Command].c_str(), ImVec2(140, 20)) || GetAsyncKeyState(VK_RETURN) & WM_KEYUP)
+		if (ImGui::Button(CommandStrings[Command].c_str(), ImVec2(140, 20)) || (ImGui::IsWindowFocused() && GetAsyncKeyState(VK_RETURN) & WM_KEYUP))
 		{
 			if (std::string(globalUser.username).size() < 1 || std::string(globalUser.password).size() < 1 || (Command == REGISTER || Command == FORGOT_PASSWORD)? std::string(globalUser.variable).size()<1:false)
 			{
-				g_response = "Missing Field";
+				g_response["res"] = "Missing Field";
 			}
 			else
 			{
 				CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ServerCall, (LPVOID)Command, 0, 0);
 			}
 		}
-		if (g_response.size() > 1)
+		if (g_response["res"].size() > 1)
 		{
-			ImGui::TextCenterCol(g_response.substr(0, 100).c_str(), (g_response.rfind("Success") != -1) ? ImVec4(0, 1, 0, 1.0*fadeLoginPage) : ImVec4(1, 0, 0, 1.0*fadeLoginPage));
+			ImGui::TextCenterCol(g_response["res"], (g_response["res"].rfind("Success") != -1) ? ImVec4(0, 1, 0, 1.0*fadeLoginPage) : ImVec4(1, 0, 0, 1.0*fadeLoginPage));
 		}
 
 	}

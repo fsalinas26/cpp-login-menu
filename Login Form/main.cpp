@@ -2,15 +2,14 @@
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
-#define DEBUG_MODE
-
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 #include "imgui_impl_win32.h"
+#include "json.hpp"
+#include <map>
 #include "main.h"
-
 #include <Windows.h>
 #include <WinUser.h>
 #include <vector>
@@ -34,13 +33,13 @@ extern c_crypto g_crypto;
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    
-#ifdef DEBUG_MODE
+    g_response["res"] = "";
+#ifdef DEBUG
     AllocConsole();
 
     freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 #endif // DEBUG_MODE
-    g_crypto.key = "oUHqJ9IOlyjA4edqmyFdkeNi8J/x+dte2AWlGRd2uTM=";
+    g_crypto.key = c_crypto::b64_to_binary("oUHqJ9IOlyjA4edqmyFdkeNi8J/x+dte2AWlGRd2uTM=");
     
     HWND desktop = GetDesktopWindow();
     RECT desktopr;
@@ -86,8 +85,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     GetWindowRect(GetDesktopWindow(), &screen_rect);
     auto x = float(screen_rect.right) * 0.1f;
     auto y = float(screen_rect.bottom) * 0.1f;
-
     ImVec4 clear_color = ImVec4(0, 0, 0, 1.0f);
+    InitImGui();
     //ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.5, 0.5, 0.5, 1.0));
     // Main loop
     bool done = false;

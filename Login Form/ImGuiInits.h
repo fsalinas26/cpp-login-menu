@@ -1,8 +1,8 @@
 #include <deque>
 #include <string>
 #include <map>
-
-
+#include <D3DX11tex.h>
+#include "Textures/exitButton.h"
 
 ImVec4 TextColor = ImVec4(0.1, 0.1, 0.1, 1.0);
 ImVec4 FrameColor = ImVec4(0.1, 0.1, 0.1, 1.0);
@@ -11,7 +11,7 @@ static ID3D11Device* g_pd3dDevice = NULL;
 static ID3D11DeviceContext* g_pd3dDeviceContext = NULL;
 static IDXGISwapChain* g_pSwapChain = NULL;
 static ID3D11RenderTargetView* g_mainRenderTargetView = NULL;
-
+ID3D11ShaderResourceView* exitIcon = NULL;
 bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
 void CreateRenderTarget();
@@ -28,7 +28,12 @@ std::map<char*, float> animMap;
 std::map<DWORD, ImVec4> fadeMap;
 float fadeMult = 1.0;
 double time_start = -1.0;
-
+void InitImGui()
+{
+	D3DX11_IMAGE_LOAD_INFO info;
+	D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, rawData, sizeof(rawData), &info,
+		NULL, &exitIcon, 0);
+}
 void InitStyle()
 {
 	ImVec4* colors = ImGui::GetStyle().Colors;
@@ -242,7 +247,7 @@ namespace ImGui {
 	//*ColorsToFade takes a vector of DWORD ImGui Color Styles whose alpha should be changed during the animation
 	//Set ClearCols to true to pop the style vars after the items have been drawn
 	//Return value is the Alpha
-	double DropDownAnimation(char* name, float speed, float startingOffset, bool direction, std::vector<DWORD> ColorsToFade, bool ClearCols)
+	double DropDownAnimation(char* name, float speed, float startingOffset, direction direction, std::vector<DWORD> ColorsToFade, bool ClearCols)
 	{
 		if (ClearCols)
 		{
@@ -256,7 +261,7 @@ namespace ImGui {
 		{
 			animMap[name] = startingOffset;
 		}
-		if (direction == DOWN)
+		if (direction== DOWN)
 		{
 			if (animMap[name] > 0)
 			{
@@ -328,6 +333,7 @@ namespace ImGui {
 		}
 
 	}
+	
 	
 	bool DrawLine(const char* label, ImVec2 p1, ImVec2 p2, const ImVec2& size_arg, float thickness, ImVec4 color) {
 		ImGuiWindow* window = GetCurrentWindow();
