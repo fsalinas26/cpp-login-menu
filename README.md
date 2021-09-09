@@ -7,7 +7,8 @@ A simple and ready-to-use ImGui login menu with a fully functioning NodeJS Serve
 
 * [Database Structure](https://github.com/fsalinas26/cpp-login-menu#sqlite-database-structure)  
 * [Database Commands](https://github.com/fsalinas26/cpp-login-menu#database-commands)  
-* [HTTP Request](https://github.com/fsalinas26/cpp-login-menu#http-request)  
+* [HTTP Request](https://github.com/fsalinas26/cpp-login-menu#http-request-c++)
+* [Encryption](https://github.com/fsalinas26/cpp-login-menu#Encryption)  
 
 ## SQLite Database Structure  
 <img src="https://i.gyazo.com/15d1064b2e246d6facc2d7e8bed6f9e1.png">
@@ -90,7 +91,44 @@ Resets the HWID of an entry in the table where username is found. The HWID reset
 **body:** n/a  
 Returns an array of objects of all entries in the table.  
 
+## HTTP Request C++
+Each request to the server will look similar. The default content-type is **application/x-www-form-urlencoded**,  
+however you can change this by declaring it in the post headers.  
 
-## HTTP Request
-Each request is [initialized](https://github.com/fsalinas26/cpp-login-menu/blob/master/Login%20Form/Server%20Auth/Authentication.cpp#L25) with a random session IV, and is encrypted using AES-256-CFB and [encoded](https://github.com/fsalinas26/cpp-login-menu/blob/master/Login%20Form/Server%20Auth/Authentication.cpp#L35-L39) in Base64URL. Both client and server will have a shared secret.  
+*Example of login request*
+```js  
+request.add_field("command", c_crypto::encrypt("login", g_crypto.key, g_crypto.iv).c_str());   //Name of command to process on server.
+request.add_field("username", c_crypto::encrypt(username, g_crypto.key, g_crypto.iv).c_str()); //Required arguments for command
+request.add_field("password", c_crypto::b64url_safe(c_crypto::SHA256_HASH(password)).c_str()); //Required arguments for command
+request.add_field("hwid", c_crypto::b64url_safe(c_crypto::SHA256_HASH(HWID)).c_str());         //Required arguments for command
+request.add_field("iv", (g_crypto.iv).c_str());                                                //Public Session IV
 
+string tempRes;
+vector<wstring> headers = { PUBLIC_TOKEN };
+send.post(L"http://localhost/post", tempRes, request, headers);
+```
+**Server Receives...**  
+```js
+{
+  command: 'Kys_GLAN0jd4JNi1E_fu3g',
+  username: 'H87CL5e0UygddHC5pbGOtw',
+  password: 'WZRHGrsBESr8wYFZ9sx0tPURuZgG2lmzyvWpwXPKz8U',
+  hwid: 'R0A-0vP6e0kqQMYIGQVSneQwCmBcwGwn0L-6cNUqpS0',
+  iv: 'oU-GRa5OijdrumD0zDcOsg'
+}
+```
+**After Decryption...**
+```js
+{
+  command: 'login',
+  username: 'fsalinas26',
+  password: 'WZRHGrsBESr8wYFZ9sx0tPURuZgG2lmzyvWpwXPKz8U',
+  hwid: 'R0A-0vP6e0kqQMYIGQVSneQwCmBcwGwn0L-6cNUqpS0',
+  iv: 'oU-GRa5OijdrumD0zDcOsg'
+}
+```
+
+## Encryption
+The body of each HTTP request and response is encrypted using AES-256-CBC with a randomly generated session IV that is initialized from the server. Both client and server will have a shared secret key. Each generated IV is stored in memory on the server and will become invalid after 30 seconds or destroyed after single use.  
+I made this visual to show how the client communicates with the server using symmetric encryption. *I'm still learning more about crypto so this is subject to change.*
+![](https://i.gyazo.com/79d3e56cf9dd33d50355d041a7c8845f.jpg)
