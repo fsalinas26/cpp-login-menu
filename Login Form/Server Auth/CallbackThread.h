@@ -4,7 +4,7 @@
 
 void ServerCall(int command)
 {
-	g_response = "";
+	g_response.clear();
 	fetchingData = true;
 	switch (command)
 	{
