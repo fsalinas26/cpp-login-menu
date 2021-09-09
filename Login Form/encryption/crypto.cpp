@@ -8,15 +8,22 @@
 #include "osrng.h"
 #include "hex.h"
 #include "sha.h"
-
 using namespace CryptoPP;
-
-
-static std::string b64_to_binary(const std::string str_in)
+std::string c_crypto::b64_to_binary(const std::string str_in)
 {
 	std::string str_out;
 	StringSource b64_ss(str_in, true,
 		new Base64Decoder(
+			new StringSink(str_out)
+		)
+	);
+	return str_out;
+}
+static std::string b64URL_to_binary(const std::string str_in)
+{
+	std::string str_out;
+	StringSource b64_ss(str_in, true,
+		new Base64URLDecoder(
 			new StringSink(str_out)
 		)
 	);
@@ -31,27 +38,15 @@ std::string c_crypto::SHA256_HASH(const std::string str_in)
 	hash.Final((byte*)&str_out[0]);
 	return str_out;
 }
-std::string c_crypto::base64url_safe(std::string str_in)
-{
-	str_in = b64_to_binary(str_in);
-	std::string str_out;
-	StringSource b64_urls(str_in, true,
-		new Base64URLEncoder(
-			new StringSink(str_out)
-		)
-	);
-	return str_out;
-}
 
 std::string c_crypto::encrypt(const std::string str_in, const std::string key, const std::string iv)
 {
-	std::string cipher, binary_key, binary_iv;
+	std::string cipher, binary_iv;
 
-	binary_key = b64_to_binary(key);
-	binary_iv = b64_to_binary(iv);
+	binary_iv = b64URL_to_binary(iv);
 
-	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption encryption;
-	encryption.SetKeyWithIV((byte*)binary_key.c_str(), binary_key.length(), (byte*)binary_iv.c_str());
+	CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption encryption;
+	encryption.SetKeyWithIV((byte*)key.c_str(), key.length(), (byte*)binary_iv.c_str());
 
 	StringSource s(str_in, true,
 		new StreamTransformationFilter(encryption,
@@ -67,13 +62,12 @@ std::string c_crypto::encrypt(const std::string str_in, const std::string key, c
 
 std::string c_crypto::decrypt(const std::string cipher, const std::string key, const std::string iv)
 {
-	std::string str_out, binary_key, binary_iv,binary_cipher;
+	std::string str_out, binary_iv,binary_cipher;
 
-	binary_key = b64_to_binary(key);
-	binary_iv = b64_to_binary(iv);
-	binary_cipher = b64_to_binary(cipher);
-	CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption decryption;
-	decryption.SetKeyWithIV((byte*)binary_key.c_str(), binary_key.length(), (byte*)binary_iv.c_str());
+	binary_iv = b64URL_to_binary(iv);
+	binary_cipher = b64URL_to_binary(cipher);
+	CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption decryption;
+	decryption.SetKeyWithIV((byte*)key.c_str(), key.length(), (byte*)binary_iv.c_str());
 	
 	StringSource s(binary_cipher, true,
 		new StreamTransformationFilter(decryption,
@@ -81,4 +75,40 @@ std::string c_crypto::decrypt(const std::string cipher, const std::string key, c
 		)
 	); 
 	return str_out;
+}
+static void debug_json_output(json& obj)
+{
+	std::cout << "JSON PARSED OBJECT \n" << std::string(30, '*') << '\n';
+	for (auto& [key, value] : obj.items())
+	{
+		if (value.is_string())
+		{
+			std::cout << key << value.get<std::string>() << '\n';
+		}
+	}
+}
+
+std::map<std::string, std::string> c_crypto::decryptJson(const std::string aes_key, const std::string iv, json &obj)
+{
+
+	std::string binary_iv;
+	std::map<std::string, std::string> map_out;
+	binary_iv = b64URL_to_binary(iv);
+	for (auto& [key, value] : obj.items())
+	{
+		if (value.is_string())
+		{
+			std::string newValue;
+			CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption decryption;
+			decryption.SetKeyWithIV((byte*)aes_key.c_str(), aes_key.length(), (byte*)binary_iv.c_str());
+			StringSource s(b64URL_to_binary(value.get<std::string>()), true,
+				new StreamTransformationFilter(decryption,
+					new StringSink(newValue)
+				)
+			);
+			map_out[key] = newValue;
+		}
+	}
+	return map_out;
+	
 }

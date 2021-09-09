@@ -14,7 +14,8 @@
 #include <iostream>
 #include <string>
 #include <random>
-
+#include "json.hpp"
+using namespace nlohmann;
 class c_crypto
 {
 public:
@@ -22,7 +23,8 @@ public:
 	std::string key;
 	static std::string encrypt(const std::string str_in, const std::string key, const std::string iv);
 	static std::string decrypt(const std::string str_in, const std::string key, const std::string iv);
-	static std::string base64url_safe(std::string str_in);
+	static std::map<std::string, std::string> decryptJson(const std::string key, const std::string iv, json& obj);
+	static std::string b64_to_binary(const std::string str_in);
 	static std::string SHA256_HASH(const std::string password);
 private:
 };
