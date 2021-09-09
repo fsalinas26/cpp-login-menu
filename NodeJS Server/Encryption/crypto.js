@@ -1,17 +1,18 @@
 const crypto = require('crypto');
+const base64url = require('base64url');    
 
 function encrypt(text,key,iv64) {
- let iv = Buffer.from(iv64, 'base64');
- let cipher = crypto.createCipheriv('aes-256-cfb', Buffer.from(key), iv);
+ let iv = base64url.toBuffer(iv64);
+ let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
  let encrypted = cipher.update(text);
  encrypted = Buffer.concat([encrypted, cipher.final()]);
- return encrypted.toString('base64');
+ return base64url.encode(encrypted);
 }
 
 function decrypt(text,key,iv64) {
- let iv = Buffer.from(iv64, 'base64');
- let encryptedText = Buffer.from(text, 'base64');
- let decipher = crypto.createDecipheriv('aes-256-cfb', Buffer.from(key), iv);
+ let iv = base64url.toBuffer(iv64);
+ let encryptedText = base64url.toBuffer(text);
+ let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
  let decrypted = decipher.update(encryptedText);
  decrypted = Buffer.concat([decrypted, decipher.final()]);
  return decrypted.toString();
@@ -32,7 +33,7 @@ async function decryptBody(obj,keyf,iv64)
 }
 function generateIV()
 {
-    return(crypto.randomBytes(16));
+    return(base64url.encode(crypto.randomBytes(16)))
 }
 async function encryptResponse(obj,keyf,iv64)
 {

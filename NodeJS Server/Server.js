@@ -1,7 +1,7 @@
 const express = require('express'),
       app = express(),
       router = express.Router();
-const config = require('./config.json');    
+const config = require('./config.json');
 const port = 80; 
 
 const bodyParser = require('body-parser');
@@ -9,10 +9,10 @@ const bodyParser = require('body-parser');
 const sqlite3 = require("sqlite3");
 const database_filepath = "./users.db";
 const db = new sqlite3.Database(database_filepath);
-
+const DEBUG = config.DEBUG;
 const crypto = require('./Encryption/crypto');
 const key = Buffer.from("oUHqJ9IOlyjA4edqmyFdkeNi8J/x+dte2AWlGRd2uTM=",'base64');
-
+let session_ivs = new Map();
 
 
 let Commands = new Map();
@@ -27,9 +27,23 @@ function ImportCommands() {
 }
 ImportCommands();
 
-
-router.post("/post",async(req,res)=>{
-    req.body = await crypto.decryptBody(req.body,key,req.body.iv); //decrypt the JSON Object request
+const validate_session = function(req,res,next)
+{
+    let iv = session_ivs.get(req.body.iv);
+    if(iv && (req.headers.authorization === config.public_token))
+    {
+        session_ivs.delete(req.body.iv);
+        if ((new Date()-iv)/1000 < 30) //Checks if IV is less than 30 seconds old
+        {
+            next();
+            return;
+        };
+    }
+    res.send({"res":"Invalid Session"});
+     
+}
+router.post("/post",validate_session,async(req,res)=>{
+    if(!DEBUG)req.body = await crypto.decryptBody(req.body,key,req.body.iv); //decrypt the JSON Object request
     req.body.ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const command = Commands.get(req.body.command);
     let resObj = {};
@@ -37,7 +51,7 @@ router.post("/post",async(req,res)=>{
         resObj.res = await command.execute(db,req.body,resObj);
     else 
         resObj.res = "You do not have access to this command";
-    resObj = await crypto.encryptResponse(resObj,key,req.body.iv); //encrypt the JSON Object response
+    if(!DEBUG)resObj = await crypto.encryptResponse(resObj,key,req.body.iv); //encrypt the JSON Object response
     res.send(resObj);
 });
 
@@ -54,7 +68,9 @@ router.post("/admin",async(req,res)=>{
 
 app.get("/initialize",async(req,res)=>{
     let iv = crypto.generateIV();
-    res.send(iv.toString('base64'));
+    console.log("Generated: " + iv);
+    res.send(iv);
+    session_ivs.set(iv,new Date());
 })
 
 app.use(bodyParser.json()); // support json encoded bodies
