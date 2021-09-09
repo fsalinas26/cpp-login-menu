@@ -1,5 +1,7 @@
 {
     "auth": "API_TOKEN",
+    "public_token": "PUBLIC_TOKEN",
     "HWID_LOCKED": true, 
-    "HWID_RESET_FREQUENCY_DAYS": 7.0
+    "HWID_RESET_FREQUENCY_DAYS": 7.0,
+    "DEBUG":false
 }
