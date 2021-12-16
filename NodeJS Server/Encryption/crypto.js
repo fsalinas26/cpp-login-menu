@@ -18,7 +18,7 @@ function decrypt(text,key,iv64) {
  return decrypted.toString();
 }
 
-const nonencrypted = ['hwid','iv','password','newPassword'];
+const nonencrypted = ['iv'];
 async function decryptBody(obj,keyf,iv64)
 {
     let obj_out = {};

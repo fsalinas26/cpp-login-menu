@@ -52,6 +52,7 @@ router.post("/post",validate_session,async(req,res)=>{
     else 
         resObj.res = "You do not have access to this command";
     if(!DEBUG)resObj = await crypto.encryptResponse(resObj,key,req.body.iv); //encrypt the JSON Object response
+    resObj["token"] = req.body.token;
     res.send(resObj);
 });
 
