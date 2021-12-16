@@ -8,11 +8,10 @@ A simple and ready-to-use ImGui login menu with a fully functioning NodeJS Serve
 * [Database Structure](https://github.com/fsalinas26/cpp-login-menu#sqlite-database-structure)  
 * [Database Commands](https://github.com/fsalinas26/cpp-login-menu#database-commands)  
 * [HTTP Request](https://github.com/fsalinas26/cpp-login-menu#http-request-c++)
+* [REST API](https://github.com/fsalinas26/cpp-login-menu#rest-api-calls)
 * [Encryption](https://github.com/fsalinas26/cpp-login-menu#Encryption)  
 
 ## SQLite Database Structure  
-<img src="https://i.gyazo.com/15d1064b2e246d6facc2d7e8bed6f9e1.png">
-
 | Column  | Type | Details |
 | ------------- |---| ------------- |
 | License |UNIQUE| For storing uuid4 serials.   |
@@ -89,7 +88,37 @@ Resets the HWID of an entry in the table where username is found. The HWID reset
 ### ShowAllUsers.js (AdminOnly)
 **Name:** show  
 **body:** n/a  
-Returns an array of objects of all entries in the table.  
+Returns an array of objects of all entries in the table.   
+
+## REST API Calls   
+To test any of the commands, simply provide the command name and the respective fields for each function (shown above).   
+**Generating a key**
+```
+POST http://localhost:80/admin 
+HTTP/1.1 content-type: application/json 
+Authorization: API_TOKEN
+
+{
+"command": "generate", 
+"length": "90", 
+"rank": "2", 
+"quantity": "1"
+}
+```  
+**Changing users rank**
+```
+POST http://localhost:80/admin 
+HTTP/1.1 content-type: application/json 
+Authorization: API_TOKEN
+
+{
+"command": "rank", 
+"username": "fsalinas26", 
+"newRank": "2"
+}
+```  
+Your API_TOKEN is declared in *config.json* and should be a random string of characters strictly for admin access.  
+
 
 ## HTTP Request C++
 Each request to the server will look similar. The default content-type is **application/x-www-form-urlencoded**,  
