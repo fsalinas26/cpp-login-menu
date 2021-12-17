@@ -77,7 +77,7 @@ void LoginPage()//Draw Login Form Page
 		}
 		if (g_response["res"].size() > 1)
 		{
-			ImGui::TextCenterCol(g_response["res"], (g_response["res"].rfind("Success") != -1) ? ImVec4(0, 1, 0, 1.0*fadeLoginPage) : ImVec4(1, 0, 0, 1.0*fadeLoginPage));
+			ImGui::TextCenterCol(g_response["res"], (g_response["status"] != "401") ? ImVec4(0, 1, 0, 1.0 * fadeLoginPage) : ImVec4(1, 0, 0, 1.0 * fadeLoginPage));
 		}
 
 	}
