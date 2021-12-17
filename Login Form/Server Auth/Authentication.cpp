@@ -29,16 +29,13 @@ static void decryptResponse(const string res, map<string, string> &g_response)
 	if (res.size() > 0)
 	{
 		auto obj = json::parse(res);
-		if (obj["token"] == g_crypto.token)
-		{
-			if (obj["res"] == "Invalid Session")
-				g_response["res"] = obj["res"];
-			else {
-					g_response = c_crypto::decryptJson(g_crypto.key, g_crypto.iv, obj);
-			}
-		}
+		if (obj["res"] == "Invalid Session")
+			g_response["res"] = obj["res"];
 		else {
-			g_response["res"] = "Invalid Session";
+			if (obj["token"] == g_crypto.token)
+			{
+				g_response = c_crypto::decryptJson(g_crypto.key, g_crypto.iv, obj);
+			}
 		}
 	}
 	else

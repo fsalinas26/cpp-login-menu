@@ -45,12 +45,13 @@ static std::string b64URL_to_binary(const std::string str_in)
 
 std::string c_crypto::MD5_HASH(const std::string str_in)
 {
-	std::string str_out;
+	std::string str_out,str_out_t;
 	MD5 hash;
 	hash.Update((const byte*)str_in.data(), str_in.size());
 	str_out.resize(hash.DigestSize());
 	hash.Final((byte*)&str_out[0]);
-	return str_out;
+	StringSource ss(str_out, true, new HexEncoder(new StringSink(str_out_t)));
+	return str_out_t;
 }
 
 std::string c_crypto::encrypt(const std::string str_in, const std::string key, const std::string iv)
