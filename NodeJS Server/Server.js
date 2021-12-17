@@ -43,10 +43,12 @@ const validate_session = function(req,res,next)
      
 }
 router.post("/post",validate_session,async(req,res)=>{
+    console.log(req.body);
     if(!DEBUG)req.body = await crypto.decryptBody(req.body,key,req.body.iv); //decrypt the JSON Object request
+    console.log(req.body);
     req.body.ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const command = Commands.get(req.body.command);
-    let resObj = {};
+    let resObj = {"status":"200"};
     if(!command.adminOnly)
         resObj.res = await command.execute(db,req.body,resObj);
     else 

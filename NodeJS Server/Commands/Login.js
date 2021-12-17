@@ -33,21 +33,25 @@ module.exports = {
                                 }
                                 else
                                 {
+                                    out_obj["status"] = "401";
                                     resolve("Invalid HWID");
                                 }
                             }
                             else
                             {
+                                out_obj["status"] = "401";
                                 resolve("License Expired");
                             }
                         }
                         else
                         {
+                            out_obj["status"] = "401";
                             resolve("Invalid Password");
                         }
                     }
                     else
                     {
+                        out_obj["status"] = "401";
                         resolve("Invalid Credentials");
                     }
                 })

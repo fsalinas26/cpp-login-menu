@@ -16,8 +16,10 @@ module.exports = {
                                 resolve("Password Changed Successfully");
                         })
                     }else if(err){
+                        out_obj["status"] = "401";
                         resolve(er.message);
                     }else{
+                        out_obj["status"] = "401";
                         resolve("No user found");
                     }
                 })

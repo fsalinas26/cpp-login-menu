@@ -15,16 +15,20 @@ execute(db,body,obj_out,adminMode){
                     if(DaysFromLastReset > config.HWID_RESET_FREQUENCY_DAYS || adminMode)
                     {
                         db.run("UPDATE Users SET HWID = '0', LastReset = ? WHERE Username = ?",[macros.getTimestamp(new Date()),body.username],function(err){
-                            if(err)
+                            if(err){
+                                out_obj["status"] = "401";
                                 resolve(err.message);
+                            }
                             else
                                 resolve(`HWID Successfully Updated for ${body.username}`);
                         })
                     }else{
+                        out_obj["status"] = "401";
                         resolve(`You cannot reset your HWID for another ${(config.HWID_RESET_FREQUENCY_DAYS-DaysFromLastReset).toFixed(2)} days`);
                     }
                 }
                 else{
+                    out_obj["status"] = "401";
                     resolve("No user found");
                 }
             })

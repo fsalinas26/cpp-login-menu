@@ -17,14 +17,18 @@ module.exports = {
                     (err,finished)=>{
                         if(err)
                         {
-                            if(err.code === "SQLITE_CONSTRAINT")
+                            if(err.code === "SQLITE_CONSTRAINT"){
+                                out_obj["status"] = "401";
                                 resolve("Username already taken");
+                            }
                             resolve(err.message);
                         }
-                        else
+                        else{
                             resolve("License Redeemed");
+                        }
                     });
                 }else{
+                    out_obj["status"] = "401";
                     resolve("License not found or already redeemed");
                 }
             })              
