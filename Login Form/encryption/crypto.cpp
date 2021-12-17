@@ -7,6 +7,7 @@
 #include "files.h"
 #include "osrng.h"
 #include "hex.h"
+#include "cryptopp/md5.h"
 #include "sha.h"
 using namespace CryptoPP;
 std::string c_crypto::b64_to_binary(const std::string str_in)
@@ -19,6 +20,18 @@ std::string c_crypto::b64_to_binary(const std::string str_in)
 	);
 	return str_out;
 }
+std::string c_crypto::generate_random_token()
+{
+	SecByteBlock key(AES::DEFAULT_KEYLENGTH), iv(AES::BLOCKSIZE);
+	std::string token;
+	OS_GenerateRandomBlock(true, key, key.size());
+	StringSource b64_ss(key.data(), key.size(), true,
+		new Base64URLEncoder(
+			new StringSink(token)
+		)
+	);
+	return token;
+}
 static std::string b64URL_to_binary(const std::string str_in)
 {
 	std::string str_out;
@@ -29,10 +42,11 @@ static std::string b64URL_to_binary(const std::string str_in)
 	);
 	return str_out;
 }
-std::string c_crypto::SHA256_HASH(const std::string str_in)
+
+std::string c_crypto::MD5_HASH(const std::string str_in)
 {
 	std::string str_out;
-	SHA256 hash;
+	MD5 hash;
 	hash.Update((const byte*)str_in.data(), str_in.size());
 	str_out.resize(hash.DigestSize());
 	hash.Final((byte*)&str_out[0]);
@@ -96,7 +110,7 @@ std::map<std::string, std::string> c_crypto::decryptJson(const std::string aes_k
 	binary_iv = b64URL_to_binary(iv);
 	for (auto& [key, value] : obj.items())
 	{
-		if (value.is_string())
+		if (value.is_string() && key!="token")
 		{
 			std::string newValue;
 			CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption decryption;

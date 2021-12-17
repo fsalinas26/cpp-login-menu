@@ -20,6 +20,7 @@ static string GenerateIV()
 	string generated_iv;
 	vector<wstring> headers = { PUBLIC_TOKEN };
 	Server::GET(L"http://localhost/initialize", generated_iv, headers);
+	g_crypto.token = c_crypto::generate_random_token();
 	return generated_iv;
 }
 
@@ -28,10 +29,16 @@ static void decryptResponse(const string res, map<string, string> &g_response)
 	if (res.size() > 0)
 	{
 		auto obj = json::parse(res);
-		if (obj["res"] == "Invalid Session")
-			g_response["res"] = obj["res"];
+		if (obj["token"] == g_crypto.token)
+		{
+			if (obj["res"] == "Invalid Session")
+				g_response["res"] = obj["res"];
+			else {
+					g_response = c_crypto::decryptJson(g_crypto.key, g_crypto.iv, obj);
+			}
+		}
 		else {
-			g_response = c_crypto::decryptJson(g_crypto.key, g_crypto.iv, obj);
+			g_response["res"] = "Invalid Session";
 		}
 	}
 	else
@@ -59,8 +66,9 @@ void Auth::LOGIN(string username, string password, string HWID, map<string, stri
 		}
 		request.add_field("command", c_crypto::encrypt("login", g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("username", c_crypto::encrypt(username, g_crypto.key, g_crypto.iv).c_str());
-		request.add_field("password", c_crypto::SHA256_HASH(password).c_str());
-		request.add_field("hwid", c_crypto::SHA256_HASH(HWID).c_str());
+		request.add_field("password", c_crypto::encrypt(c_crypto::MD5_HASH(password), g_crypto.key, g_crypto.iv).c_str());
+		request.add_field("hwid", c_crypto::encrypt(c_crypto::MD5_HASH(HWID), g_crypto.key, g_crypto.iv).c_str());
+		request.add_field("token", c_crypto::encrypt(g_crypto.token, g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("iv", (g_crypto.iv).c_str()); 
 
 		string tempRes;
@@ -96,7 +104,8 @@ void Auth::RESET_HWID(string username, string password, map<string, string> &res
 		}
 		request.add_field("command", c_crypto::encrypt("resethwid", g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("username", c_crypto::encrypt(username, g_crypto.key, g_crypto.iv).c_str());
-		request.add_field("password", c_crypto::SHA256_HASH(password).c_str());
+		request.add_field("password", c_crypto::encrypt(c_crypto::MD5_HASH(password),g_crypto.key,g_crypto.iv).c_str());
+		request.add_field("token", c_crypto::encrypt(g_crypto.token, g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("iv", (g_crypto.iv).c_str());
 
 		string tempRes;
@@ -134,9 +143,10 @@ void Auth::REGISTER(string username, string password, string HWID, string licens
 		}
 		request.add_field("command", c_crypto::encrypt("redeem", g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("username", c_crypto::encrypt(username, g_crypto.key, g_crypto.iv).c_str());
-		request.add_field("password", c_crypto::SHA256_HASH(password).c_str());
+		request.add_field("password", c_crypto::encrypt(c_crypto::MD5_HASH(password), g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("license", c_crypto::encrypt(license, g_crypto.key, g_crypto.iv).c_str());
-		request.add_field("hwid", c_crypto::SHA256_HASH(HWID).c_str());
+		request.add_field("token", c_crypto::encrypt(g_crypto.token, g_crypto.key, g_crypto.iv).c_str());
+		request.add_field("hwid", c_crypto::encrypt(c_crypto::MD5_HASH(HWID), g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("iv", (g_crypto.iv).c_str());
 
 		string tempRes;
@@ -172,8 +182,9 @@ void Auth::RESET_PASSWORD(string username, string newPassword, string license, m
 		}
 		request.add_field("command", c_crypto::encrypt("resetpw", g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("username", c_crypto::encrypt(username, g_crypto.key, g_crypto.iv).c_str());
-		request.add_field("newPassword", c_crypto::SHA256_HASH(newPassword).c_str());
+		request.add_field("newPassword", c_crypto::encrypt(c_crypto::MD5_HASH(newPassword), g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("license", c_crypto::encrypt(license, g_crypto.key, g_crypto.iv).c_str());
+		request.add_field("token", c_crypto::encrypt(g_crypto.token, g_crypto.key, g_crypto.iv).c_str());
 		request.add_field("iv", (g_crypto.iv).c_str());
 
 		string tempRes;

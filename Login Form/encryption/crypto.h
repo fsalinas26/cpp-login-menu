@@ -21,10 +21,12 @@ class c_crypto
 public:
 	std::string iv;
 	std::string key;
+	std::string token;
 	static std::string encrypt(const std::string str_in, const std::string key, const std::string iv);
 	static std::string decrypt(const std::string str_in, const std::string key, const std::string iv);
 	static std::map<std::string, std::string> decryptJson(const std::string key, const std::string iv, json& obj);
 	static std::string b64_to_binary(const std::string str_in);
-	static std::string SHA256_HASH(const std::string password);
+	static std::string MD5_HASH(const std::string in);
+	static std::string generate_random_token();
 private:
 };
