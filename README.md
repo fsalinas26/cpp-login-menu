@@ -91,7 +91,7 @@ Resets the HWID of an entry in the table where username is found. The HWID reset
 Returns an array of objects of all entries in the table.   
 
 ## REST API Calls   
-To test any of the commands, simply provide the command name and the respective fields for each function (shown above).   
+To test any of the commands, simply provide the command name and the respective fields for each function (shown above).  To test the calls w/o encryption, use the **/admin** endpoint instead of **/post**.      
 **Generating a key**
 ```
 POST http://localhost:80/admin 
