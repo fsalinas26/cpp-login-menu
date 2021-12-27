@@ -117,6 +117,9 @@ Authorization: API_TOKEN
 "newRank": "2"
 }
 ```  
+[See .rest file](https://github.com/fsalinas26/cpp-login-menu/blob/master/NodeJS%20Server/REST%20API/API.rest)  
+![](https://i.gyazo.com/38da51df2434d321eac2aa85625d55c1.png)
+
 Your API_TOKEN is declared in *config.json* and should be a random string of characters strictly for admin access.  
 
 
