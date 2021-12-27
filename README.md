@@ -1,5 +1,5 @@
 # cpp-login-menu
-A simple and ready-to-use ImGui login menu with a fully functioning NodeJS Server for securely storing user info using SQLite.
+A simple and ready-to-use ImGui login menu with a fully functioning NodeJS Server for securely storing and accessing user info using SQLite.
 <p align="center">
 <kbd><img height="400" width = "650" src="https://i.gyazo.com/67c1d77797cb4ea84751cbd337ca99e4.gif"/></kbd>
 </p>
@@ -138,7 +138,12 @@ request.add_field("iv", (g_crypto.iv).c_str());
 string tempRes;
 vector<wstring> headers = { PUBLIC_TOKEN };
 send.post(L"http://localhost/post", tempRes, request, headers);
+```  
+
+**Client Sends (encoded in x-www-form-urlencoded)...**
 ```
+command=09i_bfA6N4jXPIAw3BlROQ&username=GSAPIBQPtX41HpyrjS5QQg&password=AauvnS62Zak5hXh7dlTVzgg2RrNbj0qj7_btyVoVoILwi1iRTJHDPQLPLJ-CiDGg&hwid=VoQq3PCzdNpOiNxObbdaQhWriuiG0-X5zaUtb_UsJWBkAlZITieRPKamDvneEBbP&token=cc5peF3JrISAlIFRs5YzHLlnQWDIHeQ8L5zkKoc0mss&iv=uz3ubFnxgvXIStPXmnza0w
+```  
 **Server Receives...**  
 ```js
 {
