@@ -91,7 +91,7 @@ Resets the HWID of an entry in the table where username is found. The HWID reset
 Returns an array of objects of all entries in the table.   
 
 ## REST API Calls   
-To test any of the commands, simply provide the command name and the respective fields for each function (shown above).  To test the calls w/o encryption, use the **/admin** endpoint instead of **/post**.      
+To test any of the commands, simply provide the command name and the respective fields for each function (shown above).  To test the calls w/o encryption, use the **/admin** endpoint instead of **/post**. Body of your request should be in JSON format.  
 **Generating a key**
 ```
 POST http://localhost:80/admin 
@@ -168,7 +168,7 @@ command=09i_bfA6N4jXPIAw3BlROQ&username=GSAPIBQPtX41HpyrjS5QQg&password=AauvnS62
 ```
 
 ## Encryption
-The body of each HTTP request and response is encrypted using AES-256-CBC with a randomly generated session IV that is initialized from the server. Both client and server will have a shared secret key. Each generated IV is stored in memory on the server and will become invalid after 30 seconds or destroyed after single use.   
+The body of each HTTP request and response is encrypted using **AES-256-CBC** with a randomly generated session IV that is initialized from the server. Both client and server will have a shared secret key. Each generated IV is stored in memory on the server and will become invalid after 30 seconds or destroyed after single use.   
 
 Each client request will include a randomly generated sequence of bytes encrypted using the session IV, which the server will decrypt for the client to compare.  
 I made this visual to show how the client communicates with the server. 
