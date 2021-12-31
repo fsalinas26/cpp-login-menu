@@ -4,17 +4,14 @@ const macros = require("../Macros");
 module.exports = {
     name:"login",
     adminOnly: false,
-    //fields are {username, password, hwid}
     execute(db,body,out_obj,adminMode)
     {
         return new Promise(resolve=>{
             db.serialize(function(){
-                db.get("SELECT * FROM Users WHERE Username = ?",[body.username],async function(err,row)
+                db.get("SELECT * FROM Users WHERE Username = ? AND Password = ?",[body.username, body.password],async function(err,row)
                 {
                     if(row)
                     {
-                        if(row.Password === body.password)
-                        {
                             if(new Date(row.Expiry) > new Date())
                             {
                                 if(row.HWID === body.hwid || (!config.HWID_LOCKED))
@@ -42,12 +39,6 @@ module.exports = {
                                 out_obj["status"] = "401";
                                 resolve("License Expired");
                             }
-                        }
-                        else
-                        {
-                            out_obj["status"] = "401";
-                            resolve("Invalid Password");
-                        }
                     }
                     else
                     {
